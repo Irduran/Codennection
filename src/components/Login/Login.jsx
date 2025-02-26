@@ -10,7 +10,8 @@ import {
 import {
   provider,
   auth,
-} from "C:\\Users\\Irisita\\Desktop\\Diseño Web II\\Coddenection\\src\\credentials.js";
+} from '../../credentials';
+import {Dashboard} from "../Dashboard/Dashboard"
 
 export const Login = () => {
   const [registrando, setRegistrando] = useState(false);
@@ -60,18 +61,20 @@ export const Login = () => {
                     placeholder="Email"
                     className="cajaTexto"
                     id="email"
+                    maxLength={50}
                   />
                   <input
                     type="password"
                     placeholder="Password"
                     className="cajaTexto"
                     id="password"
+                    maxLength={10}
                   />
                   <button className="btnForm">
                     {registrando ? "Sign up" : "Log in"}
                   </button>
                 </form>
-                <h6 className='forgot'>Forgot your password?</h6>
+                <h6 className='forgot' >Forgot your password?</h6>
                 <h4 className="texto">
                   {registrando ? "Already a codennecting?" : "Start codennecting"}
                   <button
@@ -81,6 +84,8 @@ export const Login = () => {
                     {registrando ? "Sign in" : "Here!"}
                   </button>
                 </h4>
+                {value?<Dashboard/>:
+              <button onClick={handleClick}>Sign With Google</button>}
               </div>
             </div>
           </div>

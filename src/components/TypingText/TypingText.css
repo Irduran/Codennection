@@ -1,0 +1,29 @@
+.typing-text-container {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 2.5rem;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .typing-text-container h1 {
+    margin: 0;
+    overflow: hidden; /* Oculta el texto que aún no se ha "escrito" */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  }
+  
+  .typing-text-container.typing-complete h1 {
+    border-right: 0.15em solid orange; /* Cursor de typing */
+    animation: blink-caret 0.75s step-end infinite;
+  }
+  
+  @keyframes blink-caret {
+    from, to {
+      border-color: transparent;
+    }
+    50% {
+      border-color: orange;
+    }
+  }

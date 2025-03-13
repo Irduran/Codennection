@@ -1,29 +1,42 @@
-.typing-text-container {
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    transform: translateY(-50%);
-    color: white;
-    font-size: 2.5rem;
-    font-family: 'Arial', sans-serif;
+.typing-text {
+  font-family: 'Courier New', Courier, monospace;
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  color: white;
+  font-size: 7vw; 
+  z-index: 10;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.text2 {
+  color: #E574BC;
+  margin-left: 50%;
+  font-size: 8vw; 
+}
+
+@media (max-width: 768px) {
+  .typing-text {
+    font-size: 6vw; 
+    top: 2%;
+    left: 20%;
   }
-  
-  .typing-text-container h1 {
-    margin: 0;
-    overflow: hidden; /* Oculta el texto que aún no se ha "escrito" */
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+
+  .text2 {
+    font-size: 7vw; 
+    margin-left: 50%;
   }
-  
-  .typing-text-container.typing-complete h1 {
-    border-right: 0.15em solid orange; /* Cursor de typing */
-    animation: blink-caret 0.75s step-end infinite;
+}
+
+@media (max-width: 480px) {
+  .typing-text {
+    font-size: 5vw; 
+    left: 2%;
   }
-  
-  @keyframes blink-caret {
-    from, to {
-      border-color: transparent;
-    }
-    50% {
-      border-color: orange;
-    }
+
+  .text2 {
+    font-size: 6vw; 
+    margin-left: 20%;
   }
+}

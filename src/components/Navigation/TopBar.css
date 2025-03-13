@@ -1,5 +1,5 @@
 .topbar-logo {
-    width: 100px;
+    width: 80px;
 }
 
 .topbar-name {
@@ -7,7 +7,7 @@
     text-transform: uppercase;
     font-size: 2em;
     vertical-align: middle;
-    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .topbar-search {
@@ -23,20 +23,8 @@
     background-position: right 10px center;
     background-size: 20px;
     height: 40px;
-    margin-top: 5px;
+    margin-top: 10px;
 }
-
-.topbar-notification-round {
-    background-color: #b57ad6;
-    padding: 10px;
-    border-radius: 70px;
-    width: 46px;
-    margin-right: 10px;
-    display: flex;
-    justify-content: center;
-}
-
-.topbar-notification {
-    color: #ffffff;
-    font-size: 25px;
+.topbar-logo{
+    margin-left: 30px;
 }

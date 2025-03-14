@@ -81,7 +81,9 @@
 }
 
 #email::placeholder,
-#password::placeholder {
+#password::placeholder,
+#bio::placeholder,
+#programming {
   color: #fdf;
 }
 

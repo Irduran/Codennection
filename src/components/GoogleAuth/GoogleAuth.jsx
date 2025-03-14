@@ -9,14 +9,18 @@ export function GoogleAuth() {
       try {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
-        console.log(user);
-        // Redirige al usuario al Dashboard
-        navigate("/dashboard", { state: { user: { email: user.email, displayName: user.displayName } } });
+        const isNewUser = result._tokenResponse.isNewUser;
+      
+        if (isNewUser) {
+          navigate("/registro", { state: { user: { email: user.email, displayName: user.displayName } } });
+        } else {
+          navigate("/dashboard", { state: { user: { email: user.email, displayName: user.displayName } } });
+        }
       } catch (error) {
         console.error(error);
       }
     };
-
+  
   return (
     <img
     src="src\assets\google.png"

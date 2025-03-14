@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import StarryBackground from "../Star/StarryBackground";
 import "./Login.css";
 import { TypingText } from "../TypingText/TypingText";
-import { app } from "../../firebase"; 
+import { app , db } from "../../firebase"; 
 import { GoogleAuth } from "../GoogleAuth/GoogleAuth";
+import { doc, getDoc } from 'firebase/firestore';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,13 +20,22 @@ const Login = () => {
     e.preventDefault();
     try {
       if (registrando) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        console.log("Usuario registrado:", email);
+        const result = await createUserWithEmailAndPassword(auth, email, password);
+        const user = result.user;
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        
+        if (!userDoc.exists()) {
+          console.log("Usuario nuevo:", email);
+          navigate("/registro", { state: { user: { email } } });
+        } else {
+          console.log("Usuario existente:", email);
+          navigate("/dashboard", { state: { user: { email } } });
+        }
       } else {
         await signInWithEmailAndPassword(auth, email, password);
         console.log("Usuario logueado:", email);
+        navigate("/dashboard", { state: { user: { email } } });
       }
-      navigate("/dashboard", { state: { user: { email } } });
     } catch (error) {
       console.error("Error:", error.message);
       alert(registrando ? "Error en el registro" : "Error en el inicio de sesión");

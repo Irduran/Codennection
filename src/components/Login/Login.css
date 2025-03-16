@@ -83,7 +83,7 @@
 #email::placeholder,
 #password::placeholder,
 #bio::placeholder,
-#programming {
+#programming::placeholder{
   color: #fdf;
 }
 

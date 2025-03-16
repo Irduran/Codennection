@@ -81,7 +81,7 @@ function Registro() {
                       setBio(e.target.value);
                     }
                   }}
-                  maxLength={100} 
+                  maxLength={100}
                 />
                 <p className="char-counter">{bio.length}/100</p>
               </div>
@@ -123,24 +123,38 @@ function Registro() {
                   e.stopPropagation();
                   e.currentTarget.classList.remove("dragover");
                   const file = e.dataTransfer.files[0];
-                  if (file) {
+                  if (file && file.type.startsWith("image/")) {
                     setProfilePic(file);
                   }
                 }}
               >
-                <p>🖼️Drag and Drop your profile picture🖼️</p>
-                <p>or</p>
-                <input
-                  type="file"
-                  id="file-input"
-                  accept="image/*"
-                  onChange={(e) => setProfilePic(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-                <label htmlFor="file-input" className="file-input-label">
-                  Select a file...
-                </label>
-                {profilePic && <p>Your new photo: {profilePic.name}</p>}
+                {profilePic ? (
+                  <img
+                    src={URL.createObjectURL(profilePic)}
+                    alt="Preview"
+                    className="image-preview"
+                  />
+                ) : (
+                  <>
+                    <p>🖼️ Drag and Drop your profile picture 🖼️</p>
+                    <p>or</p>
+                    <input
+                      type="file"
+                      id="file-input"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file && file.type.startsWith("image/")) {
+                          setProfilePic(file);
+                        }
+                      }}
+                      style={{ display: "none" }}
+                    />
+                    <label htmlFor="file-input" className="file-input-label">
+                      Select a file...
+                    </label>
+                  </>
+                )}
               </div>
             </div>
           </div>

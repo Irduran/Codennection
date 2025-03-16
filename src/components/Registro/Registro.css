@@ -63,6 +63,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .file-drop-area.dragover {
@@ -72,6 +73,32 @@
 .file-drop-area p {
   margin: 0;
   font-size: 16px;
+}
+
+.file-input-label {
+  display: inline-block;
+  background-color: #b0619e;
+  border-radius: 30px;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.file-input-label:hover {
+  background-color: #a0558e;
+}
+
+.file-drop-area input[type="file"] {
+  display: none;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .file-input-label {

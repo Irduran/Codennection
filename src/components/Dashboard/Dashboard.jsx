@@ -9,7 +9,6 @@ const Dashboard = () => {
       <StarryBackground />
       <TopBar/>
       <div className="dashboard-container">
-
       </div>
     </>
   );

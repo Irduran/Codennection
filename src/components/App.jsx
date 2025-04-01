@@ -6,6 +6,7 @@ import Registro from './Registro/Registro';
 
 
 
+
 const App = () => {
   return (
     <Router>

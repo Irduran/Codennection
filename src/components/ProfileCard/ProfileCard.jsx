@@ -1,12 +1,12 @@
-import React from 'react'
-import './ProfileCard.css'
-export const ProfileCard = () => {
+import React from 'react';
+import './ProfileCard.css';
+
+const ProfileCard = () => {
   return (
-    <>
     <div className="profile-container d-flex justify-content-center align-items-center">
       <div className="profile-card p-0">
         <div className="profile-header text-center">
-          <div className="profile-avatar mx-auto " ></div>
+          <div className="profile-avatar mx-auto"></div>
         </div>
         <div className="profile-body text-center">
           <h5 className="profile-username">Username</h5>
@@ -23,6 +23,8 @@ export const ProfileCard = () => {
         </div>
       </div>
     </div>
-    </>
-  )
+  );
 }
+
+export default ProfileCard;
+

@@ -1,18 +1,29 @@
 .dashboard-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
-    z-index: 1;
-  }
-  
-  .dashboard-container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-  }
-  
-  .dashboard-container p {
-    font-size: 1.2rem;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 500px;
+  margin: 40px auto; 
+  padding: 20px;
+  position: relative;
+  min-height: 80vh; 
+  gap: 1px; 
+}
+
+.create-post {
+  width: 100%;
+}
+
+.posts-section {
+  width: 100%;
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+

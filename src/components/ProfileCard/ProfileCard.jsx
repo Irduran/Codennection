@@ -1,10 +1,16 @@
 import React from "react";
 import "./ProfileCard.css";
+import { useNavigate } from "react-router-dom";
 
 export const ProfileCard = ({ user }) => {
+  const navigate = useNavigate();
+
+  const goToProfile = () => {
+    navigate("/profile");
+  };
   return (
     <>
-    <div className="profile-container d-flex justify-content-center align-items-center">
+
       <div className="profile-card p-0">
         <div className="profile-header text-center">
           <div className="profile-avatar mx-auto"></div>
@@ -23,10 +29,10 @@ export const ProfileCard = ({ user }) => {
           </div>
         </div>
         <div className="profile-footer text-center">
-          <button className="profile-button">My Profile</button>
+          <button className="profile-button" onClick={goToProfile}>My Profile</button>
         </div>
       </div>
-    </div>
+
     </>
   )
 }

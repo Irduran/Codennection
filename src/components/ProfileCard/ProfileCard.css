@@ -1,18 +1,4 @@
-.profile-container {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    height: 63vh;
-    position: absolute;
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    text-align: center;
-    font-family: 'Courier New', Courier, monospace;
-    
-  }
-  
-  .profile-card {
+ .profile-card {
     width: 18rem;
     background-color: rgba(255, 255, 255, 0.1);
     color: black;
@@ -21,7 +7,9 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
     overflow: hidden;
-    padding-top: 40px; /* Add spacing for avatar */
+    padding-top: 40px;
+    margin-top: 5%;
+    margin-left: 5%;
   }
   
   .profile-header {

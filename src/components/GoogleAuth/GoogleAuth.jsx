@@ -11,13 +11,21 @@ export function GoogleAuth() {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
         const isNewUser = result._tokenResponse.isNewUser;
-
+  
+        const userData = {
+          email: user.email,
+          displayName: user.displayName,
+        };
+  
+        // Guardar datos en sessionStorage
+        sessionStorage.setItem("userData", JSON.stringify(userData));
+  
         if (isNewUser) {
           Swal.fire("Sign Up Success! ✨", "You're a Codder Now!🥳", "success");
-          navigate("/registro", { state: { user: { email: user.email, displayName: user.displayName } } });
+          navigate("/registro");
         } else {
           Swal.fire("Welcome! ⭐", "Have fun 🐤", "success");
-          navigate("/dashboard", { state: { user: { email: user.email, displayName: user.displayName } } });
+          navigate("/dashboard");
         }
       } catch (error) {
         console.error(error);

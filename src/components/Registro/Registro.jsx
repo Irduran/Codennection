@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import StarryBackground from "../Star/StarryBackground";
@@ -7,14 +7,24 @@ import Swal from "sweetalert2";
 import "./Registro.css";
 
 function Registro() {
-  const location = useLocation();
-  const { user } = location.state || {};
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [profilePic, setProfilePic] = useState(null);
   const [bio, setBio] = useState("");
   const [programmingLanguages, setProgrammingLanguages] = useState([]);
   const [newLanguage, setNewLanguage] = useState("");
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Obtener datos del usuario desde sessionStorage
+    const userData = sessionStorage.getItem("userData");
+    if (userData) {
+      setUser(JSON.parse(userData));
+      console.log(userData);
+    } else {
+      navigate("/"); 
+    }
+  }, [navigate]);
 
   const handleRegistro = async () => {
     if (!username.trim() || !bio.trim() || programmingLanguages.length === 0) {
@@ -27,17 +37,24 @@ function Registro() {
     }
 
     try {
-      const user = auth.currentUser;
-      await setDoc(doc(db, "users", user.uid), {
-        email: user.email,
+      const userAuth = auth.currentUser;
+      const userData = {
+        email: userAuth.email,
         nombre: username,
         profilePic: profilePic ? URL.createObjectURL(profilePic) : null,
         bio: bio,
         programmingLanguages: programmingLanguages,
-      });
-      navigate("/dashboard", {
-        state: { user: { email: user.email, displayName: username } },
-      });
+      };
+
+      // Guardar datos en Firebase
+      await setDoc(doc(db, "users", userAuth.uid), userData);
+
+      // Guardar datos en sessionStorage
+      sessionStorage.setItem("userData", JSON.stringify(userData));
+
+
+      // Redirigir al dashboard
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
       Swal.fire({
@@ -65,7 +82,7 @@ function Registro() {
           <div className="form-columns">
             <div className="form-column">
               <input
-                id="email"
+                id="username"
                 type="text"
                 placeholder="Username"
                 value={username}
@@ -93,34 +110,27 @@ function Registro() {
                   value={newLanguage}
                   onChange={(e) => setNewLanguage(e.target.value)}
                 />
-                <button className="add" onClick={handleAddLanguage}>
-                  +
+                <button className="add" onClick={handleAddLanguage}>+
                 </button>
               </div>
-              <div>
-                <ul>
-                  {programmingLanguages.map((lang, index) => (
-                    <li key={index}>{lang}</li>
-                  ))}
-                </ul>
-              </div>
+              <ul>
+                {programmingLanguages.map((lang, index) => (
+                  <li key={index}>{lang}</li>
+                ))}
+              </ul>
             </div>
             <div className="form-column">
               <div
                 className="file-drop-area"
                 onDragOver={(e) => {
                   e.preventDefault();
-                  e.stopPropagation();
                   e.currentTarget.classList.add("dragover");
                 }}
                 onDragLeave={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
                   e.currentTarget.classList.remove("dragover");
                 }}
                 onDrop={(e) => {
                   e.preventDefault();
-                  e.stopPropagation();
                   e.currentTarget.classList.remove("dragover");
                   const file = e.dataTransfer.files[0];
                   if (file && file.type.startsWith("image/")) {

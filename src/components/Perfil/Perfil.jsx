@@ -27,7 +27,11 @@ const Perfil = () => {
         <div className="banner"></div>
         <div className="profile-section">
 
-          <img src={picture} alt="Profile" className="profile-picture" />
+        <img
+          src={userData?.profilePic || picture}
+          alt="Profile"
+          className="profile-picture"
+        />
 
           <button className="edit-icon" onClick={goToEdit}>
               <img src={edit} alt="Edit Icon" />

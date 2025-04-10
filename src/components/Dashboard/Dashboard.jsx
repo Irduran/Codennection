@@ -1,73 +1,33 @@
-<<<<<<< Updated upstream
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import StarryBackground from '../Star/StarryBackground';
-import './Dashboard.css';
 import TopBar from '../Navigation/TopBar';
+import { ProfileCard } from '../ProfileCard/ProfileCard';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const storedUserData = JSON.parse(sessionStorage.getItem("userData"));
+
+    if (!storedUserData) {
+      navigate("/"); // Redirigir si no hay usuario en sesión
+    } else {
+      setUserData(storedUserData);
+    }
+  }, [navigate]);
+
   return (
     <>
       <StarryBackground />
-      <TopBar/>
+      <TopBar />
+      {userData && <ProfileCard user={userData} />}
       <div className="dashboard-container">
-=======
-import React, { useState, useEffect } from "react";
-import StarryBackground from "../Star/StarryBackground";
-import "../Dashboard/Dashboard.css";
-import TopBar from "../Navigation/TopBar";
-import ProfileCard from "../ProfileCard/ProfileCard";
-import PostList from "../PostList/PostList";
-import CreatePost from "../CreatePost/CreatePost";
-import { db, collection, onSnapshot, addDoc } from "../../firebase";
-
-const Dashboard = () => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "posts"), (snapshot) => {
-      const postsArray = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setPosts(postsArray);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const addPost = async (newPost) => {
-    try {
-      await addDoc(collection(db, "posts"), {
-        ...newPost,
-        author: "usuario1",
-        createdAt: new Date(),
-      });
-    } catch (error) {
-      console.error("Error al publicar:", error);
-    }
-  };
-
-return (
-  <>
-    <StarryBackground />
-    <TopBar />
-    <ProfileCard />
-    <div className="dashboard-container">
-      <CreatePost addPost={addPost} />
-      <div className="posts-section">
-        <PostList posts={posts} />
->>>>>>> Stashed changes
+        {/* Otros componentes del dashboard */}
       </div>
-    </div>
-  </>
-);
-
+    </>
+  );
 };
 
-<<<<<<< Updated upstream
 export default Dashboard;
-=======
-export default Dashboard;
-
->>>>>>> Stashed changes

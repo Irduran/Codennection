@@ -41,6 +41,8 @@
     top: 10px;
     right: 10px;
     cursor: pointer;
+    background-color: transparent;
+    border: none;
   }
 
   .edit-icon img {

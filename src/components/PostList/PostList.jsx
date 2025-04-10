@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db, collection, onSnapshot, doc, updateDoc, deleteDoc } from "../../firebase";
 import { getAuth } from "firebase/auth";
-import { height } from "@fortawesome/free-solid-svg-icons/fa0";
-import Post from "../Posts/Post"
+import Post from "../Posts/Post";
 
 /* Emojis */
 const emojiDictionary = {
@@ -93,48 +92,46 @@ function PostList() {
   };
 
   return (
-<div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "20px" }}>
-  {posts.length === 0 && <p style={emptyMessageStyle}>No hay publicaciones aún.</p>}
-  {posts.map((post) => {
-    const media = [
-      ...(post.images || []).map((url) => ({ type: "image", url })),
-      ...(post.videos || []).map((url) => ({ type: "video", url })),
-    ];
+    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "20px" }}>
+      {posts.length === 0 && <p style={emptyMessageStyle}>No hay publicaciones aún.</p>}
+      {posts.map((post) => {
+        const media = [
+          ...(post.images || []).map((url) => ({ type: "image", url })),
+          ...(post.videos || []).map((url) => ({ type: "video", url })),
+        ];
 
-    return (
-      <Post
-          key={post.id}
-          username={post.authorName}
-          time={post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleDateString() : "Ahora"}
-          text={editingPostId === post.id ? newContent[post.id] : post.content}
-          media={media}
-          quacks={post.likes || 0}
-          comments={post.comments || []}
-          isEditing={editingPostId === post.id}
-          onEdit={() => handleEdit(post.id)}
-          onSave={() => handleSave(post.id)}
-          onDelete={() => handleDelete(post.id)}
-          onChangeEdit={(e) =>
-            setNewContent((prev) => ({ ...prev, [post.id]: e.target.value }))
-          }     
-      />
-
-    );
-  })}
-</div>
+        return (
+          <Post
+            key={post.id}
+            username={post.authorName}
+            time={
+              post.createdAt
+                ? new Date(post.createdAt.seconds * 1000).toLocaleDateString()
+                : "Ahora"
+            }
+            text={editingPostId === post.id ? newContent[post.id] : post.content}
+            media={media}
+            quacks={post.likes || 0}
+            comments={post.comments || []}
+            isEditing={editingPostId === post.id}
+            onEdit={() => handleEdit(post.id)}
+            onSave={() => handleSave(post.id)}
+            onDelete={() => handleDelete(post.id)}
+            onChangeEdit={(e) =>
+              setNewContent((prev) => ({ ...prev, [post.id]: e.target.value }))
+            }
+          />
+        );
+      })}
+    </div>
   );
-  
 }
 
-
 /* Estilos */
-
 const emptyMessageStyle = {
   textAlign: "center",
   color: "#fff",
   fontSize: "16px",
 };
-
-
 
 export default PostList;

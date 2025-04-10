@@ -105,3 +105,21 @@
 .login-container .btnswitch:hover{
   text-decoration: underline;
 }
+
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 90%;
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 40px;
+  top: 35%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+}

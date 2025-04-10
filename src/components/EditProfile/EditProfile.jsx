@@ -4,9 +4,9 @@ import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import StarryBackground from "../Star/StarryBackground";
 import Swal from "sweetalert2";
-import "./Registro.css";
+import "./EditProfile.css";
 
-function Registro() {
+function EditProfile() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [profilePic, setProfilePic] = useState(null);
@@ -14,19 +14,24 @@ function Registro() {
   const [programmingLanguages, setProgrammingLanguages] = useState([]);
   const [newLanguage, setNewLanguage] = useState("");
   const [user, setUser] = useState(null);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   useEffect(() => {
-    // Obtener datos del usuario desde sessionStorage
     const userData = sessionStorage.getItem("userData");
     if (userData) {
-      setUser(JSON.parse(userData));
-      console.log(userData);
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      setUsername(parsedUser.nombre || "");
+      setBio(parsedUser.bio || "");
+      setProgrammingLanguages(parsedUser.programmingLanguages || []);
+      setIsPrivate(parsedUser.isPrivate || false);
     } else {
-      navigate("/"); 
+      navigate("/");
     }
   }, [navigate]);
+  
 
-  const handleRegistro = async () => {
+  const handleEditProfile = async () => {
     if (!username.trim() || !bio.trim() || programmingLanguages.length === 0) {
       Swal.fire({
         icon: "error",
@@ -44,6 +49,7 @@ function Registro() {
         profilePic: profilePic ? URL.createObjectURL(profilePic) : null,
         bio: bio,
         programmingLanguages: programmingLanguages,
+        isPrivate: isPrivate,
       };
 
       // Guardar datos en Firebase
@@ -54,7 +60,7 @@ function Registro() {
 
 
       // Redirigir al dashboard
-      navigate("/dashboard");
+      navigate("/profile");
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
       Swal.fire({
@@ -77,7 +83,7 @@ function Registro() {
       <StarryBackground />
       <div className="registro-page">
         <div className="registro-container">
-          <h1>Final Touches...🪄</h1>
+          <h1>Some Changes...🪄</h1>
           <p>Email: {user?.email}</p>
           <div className="form-columns">
             <div className="form-column">
@@ -88,6 +94,17 @@ function Registro() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
+              <div className="checkbox-container">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={isPrivate}
+                      onChange={(e) => setIsPrivate(e.target.checked)}
+                    />
+                    Make my account private 🔒
+                  </label>
+             </div>
+
               <div className="bio-container">
                 <textarea
                   id="bio"
@@ -139,14 +156,20 @@ function Registro() {
                 }}
               >
                 {profilePic ? (
-                  <img
-                    src={URL.createObjectURL(profilePic)}
-                    alt="Preview"
-                    className="image-preview"
-                  />
-                ) : (
+                    <img
+                      src={URL.createObjectURL(profilePic)}
+                      alt="Preview"
+                      className="image-preview"
+                    />
+                  ) : user?.profilePic ? (
+                    <img
+                      src={user.profilePic}
+                      alt="Current Profile"
+                      className="image-preview"
+                    />
+                  ) : (
                   <>
-                    <p>🖼️ Drag and Drop your profile picture 🖼️</p>
+                    <p>🖼️ Drag and Drop your new profile picture 🖼️</p>
                     <p>or</p>
                     <input
                       type="file"
@@ -168,11 +191,11 @@ function Registro() {
               </div>
             </div>
           </div>
-          <button onClick={handleRegistro}>⭐Continue⭐</button>
+          <button onClick= {handleEditProfile}>⭐Save⭐</button>
         </div>
       </div>
     </>
   );
 }
 
-export default Registro;
+export default EditProfile;

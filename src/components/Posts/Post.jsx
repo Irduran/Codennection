@@ -5,9 +5,8 @@ import "./Post.css";
 import picture from "../../assets/blank-profile-picture.svg";
 import duck from "../../assets/duck.svg";
 import share from "../../assets/share.svg";
-import StarryBackground from "../Star/StarryBackground";
 
-const Post = ({ username, time, text, media, quacks, comments }) => {
+const Post = ({ username, time, text, media, quacks, comments, isEditing, onEdit, onSave, onDelete, onChangeEdit}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
@@ -33,7 +32,6 @@ const Post = ({ username, time, text, media, quacks, comments }) => {
 
   return (
     <>
-      <StarryBackground />
       <div className="post-container">
       <div className="post-header">
         <img src={picture} alt="Profile" className="profile-picture" />
@@ -51,16 +49,30 @@ const Post = ({ username, time, text, media, quacks, comments }) => {
           <div className="post-options" onClick={toggleOptions}>...</div>
           {showOptions && (
             <div className="options-menu">
-              <div className="option">Editar</div>
-              <div className="option">Borrar</div>
+              {isEditing ? (
+                <div className="option" onClick={onSave}>Guardar</div>
+              ) : (
+                <div className="option" onClick={onEdit}>Editar</div>
+              )}
+              <div className="option" onClick={onDelete}>Borrar</div>
               <div className="option">Reportar</div>
             </div>
           )}
         </div>
+
       </div>
 
         <div className="post-content">
+              {isEditing ? (
+          <textarea
+            className="edit-textarea"
+            value={text}
+            onChange={onChangeEdit}
+          />
+        ) : (
           <p>{text}</p>
+        )}
+
 
           {mediaCount > 0 && (
             <div className="media-container">

@@ -1,16 +1,38 @@
-.topbar-logo {
+.topbar-container {
+    width: 100%;
+    height: 80px; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; 
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  
+  .topbar-logo {
     width: 80px;
-}
-
-.topbar-name {
+    margin-left: 30px;
+  }
+  
+  .topbar-name {
     color: #ffffff;
     text-transform: uppercase;
     font-size: 2em;
     vertical-align: middle;
     font-family: 'Courier New', Courier, monospace;
+<<<<<<< Updated upstream
 }
 
 .topbar-search {
+=======
+  }
+  
+  .topbar-search {
+>>>>>>> Stashed changes
     border-radius: 35px;
     min-width: 275px;
     margin-left: 30px;
@@ -24,7 +46,5 @@
     background-size: 20px;
     height: 40px;
     margin-top: 10px;
-}
-.topbar-logo{
-    margin-left: 30px;
-}
+  }
+  

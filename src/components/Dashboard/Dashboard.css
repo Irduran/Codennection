@@ -1,4 +1,6 @@
+
 .dashboard-container {
+<<<<<<< Updated upstream
     position: absolute;
     top: 50%;
     left: 50%;
@@ -16,3 +18,40 @@
   .dashboard-container p {
     font-size: 1.2rem;
   }
+=======
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  position: relative;
+  min-height: 100vh; 
+  gap: 20px;
+  overflow-y: auto; 
+  padding-top: 80px;
+  position: relative; 
+}
+
+.fixed-sections {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.posts-section {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px;
+  gap: 10px;
+  margin-top: 20px; 
+}
+>>>>>>> Stashed changes

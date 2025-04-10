@@ -10,11 +10,14 @@ function EditProfile() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [profilePic, setProfilePic] = useState(null);
+  const [profilePicUrl, setProfilePicUrl] = useState("");
   const [bio, setBio] = useState("");
   const [programmingLanguages, setProgrammingLanguages] = useState([]);
   const [newLanguage, setNewLanguage] = useState("");
   const [user, setUser] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
@@ -23,13 +26,51 @@ function EditProfile() {
       setUser(parsedUser);
       setUsername(parsedUser.nombre || "");
       setBio(parsedUser.bio || "");
+      setProfilePicUrl(parsedUser.profilePic || "");
       setProgrammingLanguages(parsedUser.programmingLanguages || []);
       setIsPrivate(parsedUser.isPrivate || false);
     } else {
       navigate("/");
     }
   }, [navigate]);
-  
+
+  const uploadImageToCloudinary = async (file) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+    
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "Codennections");
+      formData.append("api_key", "dtnvngwew");
+      formData.append("cloud_name", "dtnvngwew");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dtnvngwew/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al subir la imagen");
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Upload Error",
+        text: "No se pudo subir la imagen. Inténtalo de nuevo.",
+      });
+      return null;
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleEditProfile = async () => {
     if (!username.trim() || !bio.trim() || programmingLanguages.length === 0) {
@@ -43,10 +84,18 @@ function EditProfile() {
 
     try {
       const userAuth = auth.currentUser;
+      let imageUrl = user?.profilePic || "";
+
+      // Subir nueva imagen solo si se seleccionó una
+      if (profilePic) {
+        imageUrl = await uploadImageToCloudinary(profilePic);
+        if (!imageUrl && profilePic) return; // Si falla la subida y hay imagen nueva, no continuar
+      }
+
       const userData = {
         email: userAuth.email,
         nombre: username,
-        profilePic: profilePic ? URL.createObjectURL(profilePic) : null,
+        profilePic: imageUrl,
         bio: bio,
         programmingLanguages: programmingLanguages,
         isPrivate: isPrivate,
@@ -58,8 +107,7 @@ function EditProfile() {
       // Guardar datos en sessionStorage
       sessionStorage.setItem("userData", JSON.stringify(userData));
 
-
-      // Redirigir al dashboard
+      // Redirigir al perfil
       navigate("/profile");
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
@@ -75,6 +123,18 @@ function EditProfile() {
     if (newLanguage.trim() !== "") {
       setProgrammingLanguages([...programmingLanguages, newLanguage.trim()]);
       setNewLanguage("");
+    }
+  };
+
+  const handleRemoveLanguage = (indexToRemove) => {
+    setProgrammingLanguages(programmingLanguages.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleFileChange = (file) => {
+    if (file && file.type.startsWith("image/")) {
+      setProfilePic(file);
+      // Mostrar preview local mientras se sube
+      setProfilePicUrl(URL.createObjectURL(file));
     }
   };
 
@@ -95,15 +155,15 @@ function EditProfile() {
                 onChange={(e) => setUsername(e.target.value)}
               />
               <div className="checkbox-container">
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={isPrivate}
-                      onChange={(e) => setIsPrivate(e.target.checked)}
-                    />
-                    Make my account private 🔒
-                  </label>
-             </div>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={isPrivate}
+                    onChange={(e) => setIsPrivate(e.target.checked)}
+                  />
+                  Make my account private 🔒
+                </label>
+              </div>
 
               <div className="bio-container">
                 <textarea
@@ -126,13 +186,23 @@ function EditProfile() {
                   placeholder="Add a programming language"
                   value={newLanguage}
                   onChange={(e) => setNewLanguage(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleAddLanguage()}
                 />
-                <button className="add" onClick={handleAddLanguage}>+
+                <button className="add" onClick={handleAddLanguage}>
+                  +
                 </button>
               </div>
-              <ul>
+              <ul className="languages-list">
                 {programmingLanguages.map((lang, index) => (
-                  <li key={index}>{lang}</li>
+                  <li key={index}>
+                    {lang}
+                    <button 
+                      className="remove-language" 
+                      onClick={() => handleRemoveLanguage(index)}
+                    >
+                      ×
+                    </button>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -150,24 +220,30 @@ function EditProfile() {
                   e.preventDefault();
                   e.currentTarget.classList.remove("dragover");
                   const file = e.dataTransfer.files[0];
-                  if (file && file.type.startsWith("image/")) {
-                    setProfilePic(file);
-                  }
+                  handleFileChange(file);
                 }}
               >
-                {profilePic ? (
+                {profilePicUrl ? (
+                  <>
                     <img
-                      src={URL.createObjectURL(profilePic)}
+                      src={profilePicUrl}
                       alt="Preview"
                       className="image-preview"
                     />
-                  ) : user?.profilePic ? (
-                    <img
-                      src={user.profilePic}
-                      alt="Current Profile"
-                      className="image-preview"
-                    />
-                  ) : (
+                    {isUploading && (
+                      <div className="upload-progress">
+                        <p>Uploading... {uploadProgress}%</p>
+                        <progress value={uploadProgress} max="100" />
+                      </div>
+                    )}
+                  </>
+                ) : user?.profilePic ? (
+                  <img
+                    src={user.profilePic}
+                    alt="Current Profile"
+                    className="image-preview"
+                  />
+                ) : (
                   <>
                     <p>🖼️ Drag and Drop your new profile picture 🖼️</p>
                     <p>or</p>
@@ -177,9 +253,7 @@ function EditProfile() {
                       accept="image/*"
                       onChange={(e) => {
                         const file = e.target.files[0];
-                        if (file && file.type.startsWith("image/")) {
-                          setProfilePic(file);
-                        }
+                        handleFileChange(file);
                       }}
                       style={{ display: "none" }}
                     />
@@ -191,7 +265,9 @@ function EditProfile() {
               </div>
             </div>
           </div>
-          <button onClick= {handleEditProfile}>⭐Save⭐</button>
+          <button onClick={handleEditProfile} disabled={isUploading}>
+            {isUploading ? "Saving..." : "⭐Save⭐"}
+          </button>
         </div>
       </div>
     </>

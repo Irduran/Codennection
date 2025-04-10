@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import StarryBackground from '../Star/StarryBackground';
 import TopBar from '../Navigation/TopBar';
 import { ProfileCard } from '../ProfileCard/ProfileCard';
+import Perfil from '../Perfil/Perfil';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Dashboard = () => {
     <>
       <StarryBackground />
       <TopBar />
+      
       {userData && <ProfileCard user={userData} />}
       <div className="dashboard-container">
         {/* Otros componentes del dashboard */}

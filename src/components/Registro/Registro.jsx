@@ -10,21 +10,57 @@ function Registro() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [profilePic, setProfilePic] = useState(null);
+  const [profilePicUrl, setProfilePicUrl] = useState("");
   const [bio, setBio] = useState("");
   const [programmingLanguages, setProgrammingLanguages] = useState([]);
   const [newLanguage, setNewLanguage] = useState("");
   const [user, setUser] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    // Obtener datos del usuario desde sessionStorage
     const userData = sessionStorage.getItem("userData");
     if (userData) {
       setUser(JSON.parse(userData));
       console.log(userData);
     } else {
-      navigate("/"); 
+      navigate("/");
     }
   }, [navigate]);
+
+  const uploadImageToCloudinary = async (file) => {
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "Codennections");
+      formData.append("api_key", "dtnvngwew");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dtnvngwew/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al subir la imagen");
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Upload Error",
+        text: "No se pudo subir la imagen. Inténtalo de nuevo.",
+      });
+      return null;
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleRegistro = async () => {
     if (!username.trim() || !bio.trim() || programmingLanguages.length === 0) {
@@ -38,20 +74,24 @@ function Registro() {
 
     try {
       const userAuth = auth.currentUser;
+      let imageUrl = "";
+
+      if (profilePic) {
+        imageUrl = await uploadImageToCloudinary(profilePic);
+        if (!imageUrl) return;
+      }
+
       const userData = {
         email: userAuth.email,
         nombre: username,
-        profilePic: profilePic ? URL.createObjectURL(profilePic) : null,
+        profilePic: imageUrl || null,
         bio: bio,
         programmingLanguages: programmingLanguages,
       };
 
-      // Guardar datos en Firebase
       await setDoc(doc(db, "users", userAuth.uid), userData);
 
-      // Guardar datos en sessionStorage
       sessionStorage.setItem("userData", JSON.stringify(userData));
-
 
       // Redirigir al dashboard
       navigate("/dashboard");
@@ -69,6 +109,19 @@ function Registro() {
     if (newLanguage.trim() !== "") {
       setProgrammingLanguages([...programmingLanguages, newLanguage.trim()]);
       setNewLanguage("");
+    }
+  };
+
+  const handleRemoveLanguage = (indexToRemove) => {
+    setProgrammingLanguages((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  const handleFileChange = async (file) => {
+    if (file && file.type.startsWith("image/")) {
+      setProfilePic(file);
+      setProfilePicUrl(URL.createObjectURL(file));
     }
   };
 
@@ -110,12 +163,21 @@ function Registro() {
                   value={newLanguage}
                   onChange={(e) => setNewLanguage(e.target.value)}
                 />
-                <button className="add" onClick={handleAddLanguage}>+
+                <button className="add" onClick={handleAddLanguage}>
+                  +
                 </button>
               </div>
-              <ul>
+              <ul className="language-list">
                 {programmingLanguages.map((lang, index) => (
-                  <li key={index}>{lang}</li>
+                  <li key={index} className="language-item">
+                    {lang}
+                    <button
+                      className="remove-btn"
+                      onClick={() => handleRemoveLanguage(index)}
+                    >
+                      ✖
+                    </button>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -133,17 +195,20 @@ function Registro() {
                   e.preventDefault();
                   e.currentTarget.classList.remove("dragover");
                   const file = e.dataTransfer.files[0];
-                  if (file && file.type.startsWith("image/")) {
-                    setProfilePic(file);
-                  }
+                  handleFileChange(file);
                 }}
               >
-                {profilePic ? (
-                  <img
-                    src={URL.createObjectURL(profilePic)}
-                    alt="Preview"
-                    className="image-preview"
-                  />
+                {profilePicUrl ? (
+                  <>
+                    <img
+                      src={profilePicUrl}
+                      alt="Preview"
+                      className="image-preview"
+                    />
+                    {isUploading && (
+                      <p className="uploading-text">Uploading...</p>
+                    )}
+                  </>
                 ) : (
                   <>
                     <p>🖼️ Drag and Drop your profile picture 🖼️</p>
@@ -154,9 +219,7 @@ function Registro() {
                       accept="image/*"
                       onChange={(e) => {
                         const file = e.target.files[0];
-                        if (file && file.type.startsWith("image/")) {
-                          setProfilePic(file);
-                        }
+                        handleFileChange(file);
                       }}
                       style={{ display: "none" }}
                     />
@@ -168,7 +231,9 @@ function Registro() {
               </div>
             </div>
           </div>
-          <button onClick={handleRegistro}>⭐Continue⭐</button>
+          <button onClick={handleRegistro} disabled={isUploading}>
+            {isUploading ? "Uploading..." : "⭐Continue⭐"}
+          </button>
         </div>
       </div>
     </>

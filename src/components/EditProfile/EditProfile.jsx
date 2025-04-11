@@ -196,12 +196,12 @@ function EditProfile() {
                 {programmingLanguages.map((lang, index) => (
                   <li key={index}>
                     {lang}
-                    <button 
+                    <span 
                       className="remove-language" 
                       onClick={() => handleRemoveLanguage(index)}
                     >
-                      ×
-                    </button>
+                      ✖
+                    </span>
                   </li>
                 ))}
               </ul>

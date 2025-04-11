@@ -48,7 +48,7 @@ const Perfil = () => {
 
             <div className="button-container">
               <div className="button button-visibility"> 
-                <span>Privado 🔒</span>
+              <span>{userData?.isPrivate ? 'Private 🔒' : 'Public 🌍'}</span>
               </div>
               <div className="chat-icon">
                   <img src={message} alt="Messages" />

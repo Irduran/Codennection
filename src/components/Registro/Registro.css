@@ -239,27 +239,22 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font-family: 'Comic Sans MS', cursive;
   font-size: 14px;
 }
 .remove-btn {
-  background-color: #d46ecf;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 12px; /* Más pequeñita */
-  font-weight: bold;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-  padding: 0;
-}
-
-.remove-btn:hover {
-  background-color: #ff8be3;
+  background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 12px; 
+    font-weight: bold;
+    width: 0px;
+    height: 0px;
+    border-radius: 50%;
+    display: inline;
+    align-items: start;
+    transition: background-color 0.3s ease;
+    padding: 10;
+    margin-left: 10px;
 }
 

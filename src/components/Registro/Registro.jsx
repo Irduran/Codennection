@@ -171,12 +171,12 @@ function Registro() {
                 {programmingLanguages.map((lang, index) => (
                   <li key={index} className="language-item">
                     {lang}
-                    <button
+                    <span
                       className="remove-btn"
                       onClick={() => handleRemoveLanguage(index)}
                     >
                       ✖
-                    </button>
+                    </span>
                   </li>
                 ))}
               </ul>

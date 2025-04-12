@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
-import StarryBackground from "../Star/StarryBackground";
 import Swal from "sweetalert2";
 import "./EditProfile.css";
 
@@ -140,7 +139,6 @@ function EditProfile() {
 
   return (
     <>
-      <StarryBackground />
       <div className="registro-page">
         <div className="registro-container">
           <h1>Some Changes...🪄</h1>

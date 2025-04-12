@@ -10,7 +10,6 @@ export const NotFound = () => {
     }
   return (
     <>
-    <StarryBackground />
     <div className="d-flex align-items-center justify-content-center m-5">
             <div className="text-center">
                 <h1 className="display-1 fw-bold">404</h1>

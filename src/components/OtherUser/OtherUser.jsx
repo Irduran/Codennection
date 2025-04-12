@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import StarryBackground from '../Star/StarryBackground';
 import picture from '../../assets/blank-profile-picture.svg';
 import message from '../../assets/message-heart.svg';
 import './OtherUser.css';
@@ -47,7 +46,6 @@ const OtherUser = () => {
 
   return (
     <>
-      <StarryBackground />
       <TopBar/>
       <div className="profile-container">
         <div className="banner"></div>

@@ -8,8 +8,13 @@
   z-index: 1000; 
   padding: 0 20px;
   display: flex;
+  position: sticky;
   justify-content: space-between;
   align-items: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .topbar-logo {

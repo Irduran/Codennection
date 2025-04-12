@@ -8,8 +8,9 @@
     text-align: center;
     overflow: hidden;
     padding-top: 40px;
-    margin-top: 5%;
-    margin-left: 5%;
+    margin-top: 8%;
+    margin-left: 10%;
+    position: fixed;
   }
   
   .profile-header {

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import StarryBackground from '../Star/StarryBackground';
 import edit from '../../assets/pencil-svgrepo-com.svg';
 import picture from '../../assets/blank-profile-picture.svg';
 import message from '../../assets/message-heart.svg';
@@ -21,7 +20,6 @@ const Perfil = () => {
   };
   return (
     <>
-      <StarryBackground />
       <TopBar/>
       <div className="profile-container">
         <div className="banner"></div>

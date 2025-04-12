@@ -5,7 +5,7 @@ import "./TopBar.css";
 import { Notification } from "../Notification/Notification";
 import { Logout } from "../Logout/Logout";
 import { useNavigate } from "react-router-dom";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 
 const TopBar = () => {

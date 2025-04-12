@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import StarryBackground from "../Star/StarryBackground";
 import "./Login.css";
 import { TypingText } from "../TypingText/TypingText";
 import { app, db } from "../../firebase";
@@ -114,7 +113,6 @@ const Login = () => {
 
   return (
     <>
-      <StarryBackground />
       <div className="login-page">
         <TypingText text1="Connect With" text2="Others" delay={100} infinite />
         <div className="login-container">

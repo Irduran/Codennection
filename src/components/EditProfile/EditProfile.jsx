@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import Swal from "sweetalert2";
-import "./Registro.css";
+import "./EditProfile.css";
 
-function Registro() {
+function EditProfile() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [profilePic, setProfilePic] = useState(null);
@@ -14,13 +14,20 @@ function Registro() {
   const [programmingLanguages, setProgrammingLanguages] = useState([]);
   const [newLanguage, setNewLanguage] = useState("");
   const [user, setUser] = useState(null);
+  const [isPrivate, setIsPrivate] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
     if (userData) {
-      setUser(JSON.parse(userData));
-      console.log(userData);
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      setUsername(parsedUser.nombre || "");
+      setBio(parsedUser.bio || "");
+      setProfilePicUrl(parsedUser.profilePic || "");
+      setProgrammingLanguages(parsedUser.programmingLanguages || []);
+      setIsPrivate(parsedUser.isPrivate || false);
     } else {
       navigate("/");
     }
@@ -28,11 +35,14 @@ function Registro() {
 
   const uploadImageToCloudinary = async (file) => {
     setIsUploading(true);
+    setUploadProgress(0);
+    
     try {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "Codennections");
       formData.append("api_key", "dtnvngwew");
+      formData.append("cloud_name", "dtnvngwew");
 
       const response = await fetch(
         "https://api.cloudinary.com/v1_1/dtnvngwew/image/upload",
@@ -61,7 +71,7 @@ function Registro() {
     }
   };
 
-  const handleRegistro = async () => {
+  const handleEditProfile = async () => {
     if (!username.trim() || !bio.trim() || programmingLanguages.length === 0) {
       Swal.fire({
         icon: "error",
@@ -73,27 +83,31 @@ function Registro() {
 
     try {
       const userAuth = auth.currentUser;
-      let imageUrl = "";
+      let imageUrl = user?.profilePic || "";
 
+      // Subir nueva imagen solo si se seleccionó una
       if (profilePic) {
         imageUrl = await uploadImageToCloudinary(profilePic);
-        if (!imageUrl) return;
+        if (!imageUrl && profilePic) return; // Si falla la subida y hay imagen nueva, no continuar
       }
 
       const userData = {
         email: userAuth.email,
         nombre: username,
-        profilePic: imageUrl || null,
+        profilePic: imageUrl,
         bio: bio,
         programmingLanguages: programmingLanguages,
+        isPrivate: isPrivate,
       };
 
+      // Guardar datos en Firebase
       await setDoc(doc(db, "users", userAuth.uid), userData);
 
+      // Guardar datos en sessionStorage
       sessionStorage.setItem("userData", JSON.stringify(userData));
 
-      // Redirigir al dashboard
-      navigate("/dashboard");
+      // Redirigir al perfil
+      navigate("/profile");
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
       Swal.fire({
@@ -112,14 +126,13 @@ function Registro() {
   };
 
   const handleRemoveLanguage = (indexToRemove) => {
-    setProgrammingLanguages((prev) =>
-      prev.filter((_, index) => index !== indexToRemove)
-    );
+    setProgrammingLanguages(programmingLanguages.filter((_, index) => index !== indexToRemove));
   };
 
-  const handleFileChange = async (file) => {
+  const handleFileChange = (file) => {
     if (file && file.type.startsWith("image/")) {
       setProfilePic(file);
+      // Mostrar preview local mientras se sube
       setProfilePicUrl(URL.createObjectURL(file));
     }
   };
@@ -128,7 +141,7 @@ function Registro() {
     <>
       <div className="registro-page">
         <div className="registro-container">
-          <h1>Final Touches...🪄</h1>
+          <h1>Some Changes...🪄</h1>
           <p>Email: {user?.email}</p>
           <div className="form-columns">
             <div className="form-column">
@@ -139,6 +152,17 @@ function Registro() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
+              <div className="checkbox-container">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={isPrivate}
+                    onChange={(e) => setIsPrivate(e.target.checked)}
+                  />
+                  Make my account private 🔒
+                </label>
+              </div>
+
               <div className="bio-container">
                 <textarea
                   id="bio"
@@ -160,17 +184,18 @@ function Registro() {
                   placeholder="Add a programming language"
                   value={newLanguage}
                   onChange={(e) => setNewLanguage(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleAddLanguage()}
                 />
                 <button className="add" onClick={handleAddLanguage}>
                   +
                 </button>
               </div>
-              <ul className="language-list">
+              <ul className="languages-list">
                 {programmingLanguages.map((lang, index) => (
-                  <li key={index} className="language-item">
+                  <li key={index}>
                     {lang}
-                    <span
-                      className="remove-btn"
+                    <span 
+                      className="remove-language" 
                       onClick={() => handleRemoveLanguage(index)}
                     >
                       ✖
@@ -204,12 +229,21 @@ function Registro() {
                       className="image-preview"
                     />
                     {isUploading && (
-                      <p className="uploading-text">Uploading...</p>
+                      <div className="upload-progress">
+                        <p>Uploading... {uploadProgress}%</p>
+                        <progress value={uploadProgress} max="100" />
+                      </div>
                     )}
                   </>
+                ) : user?.profilePic ? (
+                  <img
+                    src={user.profilePic}
+                    alt="Current Profile"
+                    className="image-preview"
+                  />
                 ) : (
                   <>
-                    <p>🖼️ Drag and Drop your profile picture 🖼️</p>
+                    <p>🖼️ Drag and Drop your new profile picture 🖼️</p>
                     <p>or</p>
                     <input
                       type="file"
@@ -229,8 +263,8 @@ function Registro() {
               </div>
             </div>
           </div>
-          <button onClick={handleRegistro} disabled={isUploading}>
-            {isUploading ? "Uploading..." : "⭐Continue⭐"}
+          <button onClick={handleEditProfile} disabled={isUploading}>
+            {isUploading ? "Saving..." : "⭐Save⭐"}
           </button>
         </div>
       </div>
@@ -238,4 +272,4 @@ function Registro() {
   );
 }
 
-export default Registro;
+export default EditProfile;

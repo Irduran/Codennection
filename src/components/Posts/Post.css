@@ -1,60 +1,151 @@
-.post-container {
-  width: 600px;
-  max-width: 90%;
-  min-height: auto;
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: "Courier New", Courier, monospace;
-  padding: 20px;
+.post-container {  
+  width: 600px; /* Mantén este ancho */  
+  max-width: 100%;  
+  min-height: 100%;  
+  color: white;  
+  background: rgba(255, 255, 255, 0.1);  
+  border-radius: 12px;  
+  backdrop-filter: blur(10px);  
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+  padding: 20px;  
+  overflow: hidden;  
+  margin-bottom: 20px;  
+  margin-top: 20px;
+  margin-left: 600px;
+}
+
+.post-container::-webkit-scrollbar{
+  display: none;
+}
+
+.post-header {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow: hidden;
-  margin-bottom: 20px; 
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+}
+
+.profile-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.post-info {
+  flex-grow: 1;
+  margin-left: 10px;
 }
 
 .username {
   font-weight: bold;
   font-size: 18px;
-  white-space: nowrap; 
+  white-space: nowrap;
   text-overflow: ellipsis;
-  max-width: 100%;    
-}
-
-.time {
-  font-size: 12px;
-  font-style: italic;
-}
-
-.username,
-.time {
+  max-width: 100%;
   width: 120px;
   height: 14px;
   margin-bottom: 10px;
 }
 
-.post-options {
-  font-size: 20px;
+.time {
+  font-size: 12px;
+  font-style: italic;
+  width: 120px;
+  height: 14px;
+  margin-bottom: 10px;
 }
 
+/* Contenido del post */
+.post-content {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  color: white;
+  border-radius: 8px;
+  border: none;
+}
+
+.post-content p {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 16px;
+}
+
+/* Footer */
+.post-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.icon.unliked {
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+}
+
+.icon.liked {
+  filter: none;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Acción */
 .action {
   width: 170px;
   height: 14px;
-  font-size: 15px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
 }
-.commenter-name {
-  font-weight: bold;
-  font-size: 15px;
-  color: white;
+
+.action span {
+  margin-left: 5px;
 }
-.comment-box {
-  width: 100%;
-  height: 30px;
-  background-color: rgba(255, 255, 255, 0.2);
+
+/* Comentarios */
+.comment-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 8px;
+  padding: 5px;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.comment-profile-pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment-input {
+  flex-grow: 1;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 14px;
+  outline: none;
 }
 
 .comment-input::placeholder {
@@ -95,206 +186,50 @@
   font-size: 14px;
 }
 
+.comment-text {
+  margin-top: 5px;
+  display: block;
+}
+
+.comment:last-child {
+  margin-bottom: 10px;
+}
+
 .comment-actions {
   display: flex;
   gap: 15px;
   align-items: center;
   margin-top: 10px;
 }
-.comment-text {
-  margin-top: 5px;
-  display: block;
-}
-.comment:last-child {
-  margin-bottom: 10px;
-}
-
-.post-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.profile-picture {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.post-info {
-  flex-grow: 1;
-  margin-left: 10px;
-}
-
-.post-content {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  color: white;
-  border-radius: 8px;
-  border: none;
-}
-
-.post-content p {
-  margin: 0;
-  padding: 10px 0;
-  font-size: 16px;
-}
-
-.post-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-}
-
-.icon {
-  width: 25px;
-  height: 25px;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.actions {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.action {
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-
-.action span {
-  margin-left: 5px;
-}
-
-.comment-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 5px;
-  width: 100%;
-  margin-top: 15px;
-}
-
-.comment-profile-pic {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.comment-input {
-  flex-grow: 1;
-  padding: 8px;
-  border: none;
-  background: transparent;
-  color: white;
-  font-size: 14px;
-  outline: none;
-}
-
-.media-container {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 100%;
-  position: relative;
-  max-height: 150px;
-  overflow: hidden; 
-}
-
-
-.media-item {
-  width: 48%; 
-  height: 100%; 
-  position: relative; 
-  overflow: hidden; 
-}
-
-
-.post-image, .post-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.extra-media-overlay {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 8px;
-}
 
 .commenter-name {
   font-weight: bold;
   font-size: 15px;
-  color: white; 
-  margin-left: 10px; 
+  color: white;
+  margin-left: 10px;
 }
 
+/* Botón compartir */
 .share-button {
   background: none;
   border: none;
   cursor: pointer;
-  margin-left: auto; 
+  margin-left: auto;
   display: flex;
   align-items: center;
 }
 
 .share-button img {
   width: 20px;
-  height: 20px;  
-  object-fit: contain;  
+  height: 20px;
+  object-fit: contain;
 }
 
 .share-button:hover img {
-  opacity: 0.7;  
+  opacity: 0.7;
 }
 
-
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 10px;
-}
-
-
-.icon {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-}
-
-.icon.unliked {
-  filter: brightness(0) invert(1);
-  opacity: 0.5;
-}
-
-.icon.liked {
-  filter: none;
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-
+/* Opciones de post */
 .post-options-container {
   position: relative;
   cursor: pointer;
@@ -324,7 +259,46 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* Medios */
+.media-container {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  max-height: 150px;
+  overflow: hidden;
+}
 
+.media-item {
+  width: 48%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-image,
+.post-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.extra-media-overlay {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -338,7 +312,6 @@
   z-index: 1;
 }
 
-
 .modal-content {
   background: rgba(255, 255, 255, 0.9);
   padding: 20px;
@@ -349,7 +322,6 @@
   max-height: 80%;
   overflow: hidden;
 }
-
 
 .close-modal {
   position: absolute;
@@ -374,6 +346,7 @@
   background: rgba(0, 0, 0, 0.7);
 }
 
+/* Carrusel */
 .carousel {
   position: relative;
   width: 100%;
@@ -382,7 +355,6 @@
   justify-content: center;
   align-items: center;
 }
-
 
 .carousel .control-prev,
 .carousel .control-next {
@@ -401,24 +373,21 @@
   cursor: pointer;
 }
 
-
 .carousel .control-prev {
   left: 10px;
 }
 
-
 .carousel .control-next {
   right: 10px;
 }
-
 
 .carousel .control-prev:hover,
 .carousel .control-next:hover {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-
-.carousel img, .carousel video {
+.carousel img,
+.carousel video {
   width: 100%;
   height: auto;
   border-radius: 8px;
@@ -428,6 +397,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Editor */
 .edit-textarea {
   width: 100%;
   min-height: 80px;

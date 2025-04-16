@@ -18,10 +18,6 @@
   font-family: "Courier New", Courier, monospace;
 }
 
-#username::placeholder{
-  color: #fdf;
-}
-
 .form-columns {
   display: flex;
   gap: 20px;
@@ -216,33 +212,61 @@
   align-items: center;
   cursor: pointer;
   border: none;
+  margin-top: -10px;
 }
 
 .add-language-container .add:hover {
   background-color: #a0558e;
 }
 
-.language-list {
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-size: 16px;
+  background-color: #cccccc40;
+  border-radius: 30px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: fit-content;
+}
+
+.checkbox-label:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #b0619e;
+  cursor: pointer;
+}
+
+/* Estilos para la lista de lenguajes */
+.languages-list {
   list-style: none;
   padding: 0;
   margin-top: 10px;
 }
 
-.language-item {
-  background-color: #f3f0ff;
-  color: #4b0082;
-  border: 1px solid #d9cfff;
-  padding: 6px 12px;
-  margin: 4px 0;
-  border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
+.languages-list li {
+  display: flex;
   justify-content: space-between;
-  gap: 10px;
-  font-size: 14px;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
-.remove-btn {
-  background-color: transparent;
+
+.remove-language {
+    background-color: transparent;
     border: none;
     color: white;
     cursor: pointer;
@@ -256,5 +280,36 @@
     transition: background-color 0.3s ease;
     padding: 10;
     margin-left: 10px;
+  }
+  
+  .remove-btn:hover {
+    background-color: #ff8be3;
+  }
+
+.remove-language:hover {
+  color: #ff5252;
 }
 
+/* Estilos para la carga */
+.upload-progress {
+  margin-top: 10px;
+  text-align: center;
+  color: white;
+}
+
+.upload-progress progress {
+  width: 100%;
+  height: 5px;
+}
+
+/* Estilos para el drag and drop */
+.file-drop-area.dragover {
+  border: 2px dashed #4CAF50;
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+/* Deshabilitar botón durante carga */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

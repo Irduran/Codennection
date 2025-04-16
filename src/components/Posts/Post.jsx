@@ -5,12 +5,15 @@ import {
   arrayUnion,
   increment,
   getDoc,
+  arrayRemove
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import "./Post.css";
 import blankProfile from "../../assets/blank-profile-picture.svg";
 import duck from "../../assets/duck.svg";
 import share from "../../assets/share.svg";
+import CommentSection from "../Comments/CommentSection";
+
 
 const Post = ({
   id,
@@ -20,18 +23,16 @@ const Post = ({
   text,
   media = [],
   quacks = 0,
-  comments = [],
   isEditing,
   onEdit,
   onSave,
   onDelete,
   onChangeEdit,
 }) => {
-  const currentUser = JSON.parse(sessionStorage.getItem("user"));
+  const currentUser = JSON.parse(sessionStorage.getItem("userData"));
   const [showOptions, setShowOptions] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [commentInput, setCommentInput] = useState("");
-  const [currentComments, setCurrentComments] = useState(comments);
+  const [isOwner, setIsOwner] = useState(false);
   const [currentQuacks, setCurrentQuacks] = useState(quacks);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
 
@@ -48,18 +49,42 @@ const Post = ({
     checkLike();
   }, [id, currentUser?.uid]);
 
+  useEffect(() => {
+    const checkOwner = async () => {
+      const postRef = doc(db, "posts", id);
+      const postSnap = await getDoc(postRef);
+      const data = postSnap.data();
+      if (data?.userId === currentUser?.uid) {
+        setIsOwner(true);
+      }
+    };
+    checkOwner();
+  }, [id, currentUser?.uid]);
+
   const toggleOptions = () => setShowOptions(!showOptions);
 
   const toggleLike = async () => {
-    if (liked || !currentUser) return;
-
+    if (!currentUser) return;
+  
     const postRef = doc(db, "posts", id);
-    await updateDoc(postRef, {
-      quacks: increment(1),
-      quackedBy: arrayUnion(currentUser.uid),
-    });
-    setLiked(true);
-    setCurrentQuacks((prev) => prev + 1);
+  
+    if (liked) {
+      // Si ya le dio like, entonces lo quita
+      await updateDoc(postRef, {
+        quacks: increment(-1),
+        quackedBy: arrayRemove(currentUser.uid),
+      });
+      setLiked(false);
+      setCurrentQuacks((prev) => prev - 1);
+    } else {
+      // Si no le ha dado like, lo da
+      await updateDoc(postRef, {
+        quacks: increment(1),
+        quackedBy: arrayUnion(currentUser.uid),
+      });
+      setLiked(true);
+      setCurrentQuacks((prev) => prev + 1);
+    }
   };
 
   const handlePrev = () => {
@@ -73,34 +98,14 @@ const Post = ({
       prevIndex === media.length - 1 ? 0 : prevIndex + 1
     );
   };
-
-  const handleCommentSubmit = async () => {
-    if (!commentInput.trim()) return;
-
-    const newComment = {
-      username: currentUser.username,
-      userId: currentUser.uid,
-      text: commentInput,
-      profilePic: currentUser.profilePic || blankProfile,
-      createdAt: new Date(),
-      likes: 0,
-    };
-
-    const postRef = doc(db, "posts", id);
-    await updateDoc(postRef, {
-      comments: arrayUnion(newComment),
-    });
-
-    setCurrentComments((prev) => [...prev, newComment]);
-    setCommentInput("");
-  };
+  
 
   return (
     <div className="post-container">
       <div className="post-header">
         <img
           src={profilePic || blankProfile}
-          alt="Profile"
+          alt="Profile" 
           className="profile-picture"
         />
         <div className="post-info">
@@ -112,17 +117,21 @@ const Post = ({
         </button>
         <div className="post-options-container">
           <div className="post-options" onClick={toggleOptions}>...</div>
-          {showOptions && (
-            <div className="options-menu">
-              {isEditing ? (
-                <div className="option" onClick={onSave}>Guardar</div>
-              ) : (
-                <div className="option" onClick={onEdit}>Editar</div>
-              )}
-              <div className="option" onClick={onDelete}>Borrar</div>
-              <div className="option">Reportar</div>
-            </div>
-          )}
+        {showOptions && (
+          <div className="options-menu">
+            {isOwner && (
+              <>
+                {isEditing ? (
+                  <div className="option" onClick={onSave}>Guardar</div>
+                ) : (
+                  <div className="option" onClick={onEdit}>Editar</div>
+                )}
+                <div className="option" onClick={onDelete}>Borrar</div>
+              </>
+            )}
+            <div className="option">Reportar</div>
+          </div>
+        )}
         </div>
       </div>
 
@@ -170,51 +179,14 @@ const Post = ({
         />
         <div className="actions">
           <div className="action">{currentQuacks} quacks</div>
-          <div className="action">{currentComments.length} comentarios</div>
+          <div className="action"> comentarios</div>
         </div>
       </div>
-
-      <div className="comment-section">
-        <img
-          src={currentUser?.profilePic || blankProfile}
-          alt="Profile"
-          className="comment-profile-pic"
-        />
-        <input
-          type="text"
-          placeholder="Escribe un comentario..."
-          className="comment-input"
-          value={commentInput}
-          onChange={(e) => setCommentInput(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="comment-submit"
-          onClick={handleCommentSubmit}
-        >
-          ➤
-        </button>
-      </div>
-
-      <div className="comments-list">
-        {currentComments.map((comment, index) => (
-          <div key={index} className="comment">
-            <img
-              src={comment.profilePic || blankProfile}
-              alt="Profile"
-              className="comment-profile-pic"
-            />
-            <span className="commenter-name">{comment.username}</span>
-            <span className="comment-text">{comment.text}</span>
-            <div className="comment-actions">
-              <div className="like-button">{comment.likes} Quacks</div>
-              <span className="reply-text">Responder</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      <CommentSection postId={id} />
     </div>
+    
   );
 };
+
 
 export default Post;

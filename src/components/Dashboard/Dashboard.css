@@ -1,33 +1,9 @@
-
-
-.feed {
-  width: 100%;
-  max-width: 600px;
+.dashboard-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-}
-
-.create-post {
+  align-items: center;
   width: 100%;
-  max-width: 600px;
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.create-post textarea {
-  resize: none;
-  padding: 10px;
-  font-size: 1rem;
-}
-
-.create-post input[type="file"] {
-  margin-top: 0.5rem;
-}
-
-.create-post button {
-  align-self: flex-end;
-  padding: 0.5rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
 }

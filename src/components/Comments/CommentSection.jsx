@@ -37,7 +37,7 @@ const CommentSection = ({ postId }) => {
     const commentData = {
         commentedBy: currentUser.nombre,
         commentedUid: currentUser.uid,
-        profilePic: currentUser.photoURL || "",
+        profilePic: currentUser.profilePic || "",
         text: comment.trim(),
         createdAt: serverTimestamp(),
       };

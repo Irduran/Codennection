@@ -7,7 +7,6 @@ import TopBar from '../Navigation/TopBar';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
-import Postuser from "../PostUser/PostUser";
 import PostUser from '../PostUser/PostUser';
 
 const Perfil = () => {

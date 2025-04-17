@@ -7,6 +7,7 @@ import TopBar from "../Navigation/TopBar";
 import { ProfileCard } from "../ProfileCard/ProfileCard";
 import Post from "../Posts/Post";
 import CreatePost from "../CreatePost/CreatePost";
+import "./Dashboard.css"
 
 const Dashboard = () => {
   const navigate = useNavigate();

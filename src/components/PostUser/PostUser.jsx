@@ -101,13 +101,14 @@ const PostUser = ({
   
 
   return (
-    <div className="post-container">
+<div className="post-container">
       <div className="post-header">
-        <img
-          src={profilePic || blankProfile}
-          alt="Profile" 
-          className="profile-picture"
-        />
+      <div className="profile-picture-container">
+          <img
+            src={profilePic || blankProfile}
+            alt="Profile"
+          />
+        </div>
         <div className="post-info">
           <div className="username">{username}</div>
           <div className="time">{time}</div>
@@ -147,28 +148,32 @@ const PostUser = ({
         )}
 
         {media.length > 0 && (
-          <div className="carousel">
-            <div className="control-prev" onClick={handlePrev}>❮</div>
-            <div className="media-item">
-              {media[currentMediaIndex].type === "image" ? (
-                <img
+          <div className="media-item">
+            {media.length > 1 && (
+              <>
+                <div className="control-prev" onClick={handlePrev}>❮</div>
+                <div className="control-next" onClick={handleNext}>❯</div>
+              </>
+            )}
+
+            {media[currentMediaIndex].type === "image" ? (
+              <img
+                src={media[currentMediaIndex].url}
+                alt="Post media"
+                className="post-image"
+              />
+            ) : (
+              <video controls className="post-video">
+                <source
                   src={media[currentMediaIndex].url}
-                  alt="Post media"
-                  className="post-image"
+                  type="video/mp4"
                 />
-              ) : (
-                <video controls className="post-video">
-                  <source
-                    src={media[currentMediaIndex].url}
-                    type="video/mp4"
-                  />
-                </video>
-              )}
-            </div>
-            <div className="control-next" onClick={handleNext}>❯</div>
+              </video>
+            )}
           </div>
         )}
       </div>
+
 
       <div className="post-footer">
         <img

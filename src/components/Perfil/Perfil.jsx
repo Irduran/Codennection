@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import edit from '../../assets/pencil-svgrepo-com.svg';
-import picture from '../../assets/blank-profile-picture.svg';
-import message from '../../assets/message-heart.svg';
 import './Perfil.css';
 import TopBar from '../Navigation/TopBar';
-import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import PostUser from '../PostUser/PostUser';
+import { ProfileHeader } from '../ProfileHeader/ProfileHeader';
 
 const Perfil = () => {
   const [userData, setUserData] = useState(null);
@@ -15,7 +12,7 @@ const Perfil = () => {
   const [editingPostId, setEditingPostId] = useState(null);
   const [editedText, setEditedText] = useState("");
 
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("userData");
@@ -33,10 +30,6 @@ const Perfil = () => {
       .map((doc) => ({ id: doc.id, ...doc.data() }))
       .filter((post) => post.userId === uid);
     setPosts(userPosts);
-  };
-
-  const goToEdit = () => {
-    navigate("/editprofile");
   };
 
   const handleEdit = (postId, currentText) => {
@@ -67,39 +60,9 @@ const Perfil = () => {
   return (
     <>
       <TopBar />
-      <div className="profile-container">
-        <div className="banner"></div>
-        <div className="profile-section">
-          <img
-            src={userData?.profilePic || picture}
-            alt="Profile"
-            className="profile-picture"
-          />
-          <button className="edit-icon" onClick={goToEdit}>
-            <img src={edit} alt="Edit Icon" />
-          </button>
 
-          <div className="text-info">
-            <span className="info-name">{userData?.nombre || userData?.email || "Mi Nombre"}</span>
-            <span className="info-bio">{userData?.bio || "¡Esta es mi biografía!"}</span>
-
-            <div className="followers-container">
-              <span className="followers-count"><strong>1.2K</strong> Seguidores</span>
-              <span className="following-count"><strong>500</strong> Siguiendo</span>
-            </div>
-
-            <div className="button-container">
-              <div className="button button-visibility">
-                <span>{userData?.isPrivate ? 'Private 🔒' : 'Public 🌍'}</span>
-              </div>
-              <div className="chat-icon">
-                <img src={message} alt="Messages" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <div className='mypost-container' >
+      <ProfileHeader userData={userData} />
       
       <div className="user-posts-section">
         {userPosts.length === 0 ? (
@@ -124,6 +87,7 @@ const Perfil = () => {
             />
           ))
         )}
+      </div>
       </div>
     </>
   );

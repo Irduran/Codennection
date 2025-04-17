@@ -23,10 +23,6 @@
 }
 
 
-.post-container::-webkit-scrollbar{
-  display: none;
-}
-
 .post-header {
   display: flex;
   flex-direction: left;

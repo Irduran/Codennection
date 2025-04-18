@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 
-const TopBar = () => {
+const TopBar = ({ onSearchChange }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -23,34 +23,35 @@ const TopBar = () => {
       setSearchResults([]);
       return;
     }
-  
+
     try {
       const usersRef = collection(db, "users");
       const querySnapshot = await getDocs(usersRef);
-      const searchTerm = term.toLowerCase();
-      
+      const lowerTerm = term.toLowerCase();
+
       const results = querySnapshot.docs
-        .map(doc => ({
+        .map((doc) => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         }))
-        .filter(user => 
-          user.nombre && user.nombre.toLowerCase().includes(searchTerm)
-        );
-      
+        .filter((user) => user.nombre && user.nombre.toLowerCase().includes(lowerTerm));
+
       setSearchResults(results);
     } catch (error) {
       console.error("Error searching users:", error);
     }
   };
-  
+
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       handleSearch(searchTerm);
+      if (onSearchChange) {
+        onSearchChange(searchTerm);
+      }
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm]);
+  }, [searchTerm, onSearchChange]);
 
   const handleResultClick = (userId) => {
     navigate(`/user/${userId}`);
@@ -77,7 +78,8 @@ const TopBar = () => {
               className="topbar-search"
               value={searchTerm}
               onChange={(e) => {
-                setSearchTerm(e.target.value);
+                const term = e.target.value;
+                setSearchTerm(term);
                 setShowResults(true);
               }}
               onFocus={() => setShowResults(true)}
@@ -91,9 +93,9 @@ const TopBar = () => {
                     className="search-result-item d-flex align-items-center"
                     onClick={() => handleResultClick(user.id)}
                   >
-                    <img 
-                      src={user.profilePic} 
-                      alt="Profile" 
+                    <img
+                      src={user.profilePic}
+                      alt="Profile"
                       className="search-result-img me-2"
                       onError={(e) => {
                         e.target.src = "https://via.placeholder.com/40";

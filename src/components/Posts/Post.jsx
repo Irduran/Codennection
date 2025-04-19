@@ -13,11 +13,12 @@ import blankProfile from "../../assets/blank-profile-picture.svg";
 import duck from "../../assets/duck.svg";
 import share from "../../assets/share.svg";
 import CommentSection from "../Comments/CommentSection";
-
+import { Link } from "react-router-dom";
 
 const Post = ({
   id,
   username,
+  userId,
   profilePic,
   time,
   text,
@@ -110,7 +111,9 @@ const Post = ({
           />
         </div>
         <div className="post-info">
-          <div className="username">{username}</div>
+        <Link to={`/user/${userId}`} className="username">
+          {username}
+        </Link>
           <div className="time">{time}</div>
         </div>
         <button className="share-button">
@@ -149,7 +152,6 @@ const Post = ({
 
         {media.length > 0 && (
           <div className="media-item">
-            {/* Show media controls only if there is more than one media item */}
             {media.length > 1 && (
               <>
                 <div className="control-prev" onClick={handlePrev}>❮</div>

@@ -5,13 +5,14 @@ import { collection, getDocs, query, orderBy, updateDoc, deleteDoc, doc } from "
 import { db } from "../../firebase";
 import PostUser from '../PostUser/PostUser';
 import { ProfileHeader } from '../ProfileHeader/ProfileHeader';
+import { getAuth } from 'firebase/auth';
 
 const Perfil = () => {
   const [userData, setUserData] = useState(null);
   const [userPosts, setPosts] = useState([]);
   const [editingPostId, setEditingPostId] = useState(null);
   const [editedText, setEditedText] = useState("");
-
+  const [currentUserId, setCurrentUserId] = useState('');
 
 
   useEffect(() => {
@@ -20,6 +21,11 @@ const Perfil = () => {
       const parsedData = JSON.parse(storedData);
       setUserData(parsedData);
       getUserPosts(parsedData.uid);
+    }
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      setCurrentUserId(currentUser.uid);
     }
   }, []);
 
@@ -62,7 +68,7 @@ const Perfil = () => {
       <TopBar />
 
       <div className='mypost-container' >
-      <ProfileHeader userData={userData} />
+      <ProfileHeader userData={userData} currentUserId={currentUserId}  />
       
       <div className="user-posts-section">
         {userPosts.length === 0 ? (
@@ -72,6 +78,7 @@ const Perfil = () => {
             <PostUser
               key={post.id}
               id={post.id}
+              userId={post.userId}
               username={post.username}
               profilePic={post.profilePic}
               time={new Date(post.createdAt?.seconds * 1000).toLocaleString()}
@@ -80,11 +87,14 @@ const Perfil = () => {
               quacks={post.quacks}
               comments={post.comments}
               isEditing={editingPostId === post.id}
-              onEdit={() => handleEdit(post.id, post.text)}
-              onSave={() => handleSave(post.id)}
-              onDelete={() => handleDelete(post.id)}
-              onChangeEdit={handleChangeEdit}
+              {...(post.userId === currentUserId && {
+                onEdit: () => handleEdit(post.id, post.text),
+                onSave: () => handleSave(post.id),
+                onDelete: () => handleDelete(post.id),
+                onChangeEdit: handleChangeEdit,
+              })}
             />
+
           ))
         )}
       </div>

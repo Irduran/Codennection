@@ -110,6 +110,7 @@ const Dashboard = () => {
             <Post
               key={post.id}
               id={post.id}
+              userId={post.userId}
               username={post.username}
               profilePic={post.profilePic}
               time={new Date(post.createdAt?.seconds * 1000).toLocaleString()}

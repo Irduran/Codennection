@@ -11,7 +11,6 @@ import { db } from "../../firebase";
 import "./PostUser.css";
 import blankProfile from "../../assets/blank-profile-picture.svg";
 import duck from "../../assets/duck.svg";
-import share from "../../assets/share.svg";
 import CommentSection from "../Comments/CommentSection";
 
 
@@ -23,6 +22,7 @@ const PostUser = ({
   text,
   media = [],
   quacks = 0,
+  sharedBy,
   isEditing,
   onEdit,
   onSave,
@@ -112,10 +112,12 @@ const PostUser = ({
         <div className="post-info">
           <div className="username">{username}</div>
           <div className="time">{time}</div>
+          {sharedBy && (
+          <div className="shared-label">
+            Shared by {sharedBy}
+          </div>
+        )}
         </div>
-        <button className="share-button">
-          <img src={share} alt="share" />
-        </button>
         <div className="post-options-container">
           <div className="post-options" onClick={toggleOptions}>...</div>
         {showOptions && (

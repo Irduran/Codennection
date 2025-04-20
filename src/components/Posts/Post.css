@@ -57,6 +57,8 @@
 .post-info {
   flex-grow: 1;
   margin-left: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .username {
@@ -335,4 +337,14 @@
   padding: 10px;
   margin-top: 10px;
   resize: vertical;
+}
+
+.shared-label {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 4px;
+  font-style: italic;
+  color: #a985fc;  /* Darker text for visibility */
+  margin-top: 20px;
+  font-weight: bolder;
 }

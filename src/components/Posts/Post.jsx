@@ -5,7 +5,10 @@ import {
   arrayUnion,
   increment,
   getDoc,
-  arrayRemove
+  addDoc,
+  arrayRemove,
+  collection,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import "./Post.css";
@@ -24,6 +27,7 @@ const Post = ({
   text,
   media = [],
   quacks = 0,
+  sharedBy,
   isEditing,
   onEdit,
   onSave,
@@ -38,7 +42,6 @@ const Post = ({
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
 
   useEffect(() => {
-    // Verifica si el usuario ya dio like
     const checkLike = async () => {
       const postRef = doc(db, "posts", id);
       const postSnap = await getDoc(postRef);
@@ -66,11 +69,10 @@ const Post = ({
 
   const toggleLike = async () => {
     if (!currentUser) return;
-  
+
     const postRef = doc(db, "posts", id);
-  
+
     if (liked) {
-      // Si ya le dio like, entonces lo quita
       await updateDoc(postRef, {
         quacks: increment(-1),
         quackedBy: arrayRemove(currentUser.uid),
@@ -78,7 +80,6 @@ const Post = ({
       setLiked(false);
       setCurrentQuacks((prev) => prev - 1);
     } else {
-      // Si no le ha dado like, lo da
       await updateDoc(postRef, {
         quacks: increment(1),
         quackedBy: arrayUnion(currentUser.uid),
@@ -99,47 +100,73 @@ const Post = ({
       prevIndex === media.length - 1 ? 0 : prevIndex + 1
     );
   };
-  
+
+  const handleShare = async () => {
+    if (!currentUser) return;
+
+    const postRef = doc(db, "posts", id); 
+    const postSnap = await getDoc(postRef); 
+
+    if (postSnap.exists()) {
+      const originalPost = postSnap.data();
+
+
+      await addDoc(collection(db, "posts"), {
+        ...originalPost, 
+        userId: currentUser.uid,  
+        quacks: 0,  
+        createdAt: serverTimestamp(),
+        quackedBy: [],  
+        sharedBy: currentUser.nombre,  
+      });
+    }
+  };
 
   return (
     <div className="post-container">
       <div className="post-header">
-      <div className="profile-picture-container">
+        <div className="profile-picture-container">
           <img
             src={profilePic || blankProfile}
             alt="Profile"
           />
         </div>
         <div className="post-info">
-        <Link
-          to={userId === currentUser?.uid ? '/profile' : `/user/${userId}`}
-          className="username"
-        >
-          {username}
-        </Link>
+          <Link
+            to={userId === currentUser?.uid ? '/profile' : `/user/${userId}`}
+            className="username"
+          >
+            {username}
+          </Link>
 
           <div className="time">{time}</div>
+          {sharedBy && (
+          <div className="shared-label">
+            Shared by {sharedBy}
+          </div>
+        )}
         </div>
-        <button className="share-button">
+
+        <button className="share-button" onClick={handleShare}>
           <img src={share} alt="share" />
         </button>
         <div className="post-options-container">
           <div className="post-options" onClick={toggleOptions}>...</div>
-        {showOptions && (
-          <div className="options-menu">
-            {isOwner && (
-              <>
-                {isEditing ? (
-                  <div className="option" onClick={onSave}>Guardar</div>
-                ) : (
-                  <div className="option" onClick={onEdit}>Editar</div>
-                )}
-                <div className="option" onClick={onDelete}>Borrar</div>
-              </>
-            )}
-            <div className="option">Reportar</div>
-          </div>
-        )}
+          {showOptions && (
+            <div className="options-menu">
+              {isOwner && (
+                <>
+                  {isEditing ? (
+                    <div className="option" onClick={onSave}>Guardar</div>
+                  ) : (
+                    <div className="option" onClick={onEdit}>Editar</div>
+                  )}
+                  <div className="option" onClick={onDelete}>Borrar</div>
+                </>
+              )}
+              <div className="option">Reportar</div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -181,7 +208,6 @@ const Post = ({
         )}
       </div>
 
-
       <div className="post-footer">
         <img
           src={duck}
@@ -196,9 +222,7 @@ const Post = ({
       </div>
       <CommentSection postId={id} />
     </div>
-    
   );
 };
-
 
 export default Post;

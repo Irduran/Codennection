@@ -53,6 +53,11 @@ const Dashboard = () => {
     setPosts(filteredData);
   };
 
+  const refreshPosts = () => {
+    getPosts(userData);
+  };
+  
+
   useEffect(() => {
     const storedUserData = JSON.parse(sessionStorage.getItem("userData"));
     if (!storedUserData) {
@@ -98,20 +103,22 @@ const Dashboard = () => {
         cancelButton: "swal2-cancel cute-btn",
       },
     });
-
+  
     if (result.isConfirmed) {
       await deleteDoc(doc(db, "posts", postId));
-      getUserPosts(userData.id);
-
+  
       Swal.fire({
         title: "Deleted!",
         text: "Your post has been deleted.😉",
         icon: "success",
         timer: 1500,
         showConfirmButton: false,
+      }).then(() => {
+        refreshPosts();
       });
     }
   };
+  
 
   const handleChangeEdit = (e) => {
     setEditedText(e.target.value);
@@ -185,6 +192,7 @@ const Dashboard = () => {
               onSave={() => handleSave(post.id)}
               onDelete={() => handleDelete(post.id)}
               onChangeEdit={handleChangeEdit}
+              onPostShared={() => getPosts(userData)}
             />
           ))
         )}

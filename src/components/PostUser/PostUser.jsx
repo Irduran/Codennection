@@ -134,10 +134,12 @@ const PostUser = ({
             <div className="options-menu" ref={optionsRef}>
               {isOwner && (
                 <>
-                  {isEditing ? (
-                    <div className="option" onClick={onSave}>Save✨</div>
-                  ) : (
-                    <div className="option" onClick={onEdit}>Edit🖋️</div>
+                  {!sharedBy && (
+                    isEditing ? (
+                      <div className="option" onClick={onSave}>Save✨</div>
+                    ) : (
+                      <div className="option" onClick={onEdit}>Edit🖋️</div>
+                    )
                   )}
                   <div className="option" onClick={onDelete}>Delete❌</div>
                 </>

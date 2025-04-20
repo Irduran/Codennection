@@ -17,6 +17,7 @@ import duck from "../../assets/duck.svg";
 import share from "../../assets/share.svg";
 import CommentSection from "../Comments/CommentSection";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Post = ({
   id,
@@ -33,6 +34,7 @@ const Post = ({
   onSave,
   onDelete,
   onChangeEdit,
+  onPostShared
 }) => {
   const currentUser = JSON.parse(sessionStorage.getItem("userData"));
   const [showOptions, setShowOptions] = useState(false);
@@ -121,14 +123,13 @@ const Post = ({
 
   const handleShare = async () => {
     if (!currentUser) return;
-
+  
     const postRef = doc(db, "posts", id); 
     const postSnap = await getDoc(postRef); 
-
+  
     if (postSnap.exists()) {
       const originalPost = postSnap.data();
-
-
+  
       await addDoc(collection(db, "posts"), {
         ...originalPost, 
         userId: currentUser.uid,  
@@ -137,8 +138,22 @@ const Post = ({
         quackedBy: [],  
         sharedBy: currentUser.nombre,  
       });
+  
+      Swal.fire({
+        icon: "success",
+        title: "Post shared!",
+        text: "Your post has been shared successfully!",
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        if (onPostShared) {
+          onPostShared();
+        }
+      });
+      
     }
   };
+  
 
   return (
     <div className="post-container">
@@ -169,16 +184,18 @@ const Post = ({
         <div className="post-options" onClick={toggleOptions}>⋯</div>
         {showOptions && (
           <div className="options-menu" ref={optionsRef}>
-            {isOwner && (
-              <>
-                {isEditing ? (
-                  <div className="option" onClick={onSave}>Save✨</div>
-                ) : (
-                  <div className="option" onClick={onEdit}>Edit🖋️</div>
-                )}
-                <div className="option" onClick={onDelete}>Delete❌</div>
-              </>
-            )}
+              {isOwner && (
+                <>
+                  {!sharedBy && (
+                    isEditing ? (
+                      <div className="option" onClick={onSave}>Save✨</div>
+                    ) : (
+                      <div className="option" onClick={onEdit}>Edit🖋️</div>
+                    )
+                  )}
+                  <div className="option" onClick={onDelete}>Delete❌</div>
+                </>
+              )}
             <div className="option">Report👀</div>
           </div>
         )}

@@ -117,3 +117,19 @@
     color: white;
     margin-left: 10px;
   }
+
+  .follow-btn {
+    padding: 6px 12px;
+    background-color: #b57ad6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .follow-btn:hover {
+    background-color: #5b366e;
+  }
+  

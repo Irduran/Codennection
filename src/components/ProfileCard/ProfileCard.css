@@ -34,6 +34,7 @@
     justify-content: center;
     border: 5px solid white; /* Optional for a better look */
     z-index: 10;
+    object-fit: cover;
   }
   
   .profile-avatar::after {

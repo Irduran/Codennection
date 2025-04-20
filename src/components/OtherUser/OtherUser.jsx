@@ -6,7 +6,7 @@ import { doc, getDoc, collection, getDocs, query, orderBy, updateDoc, deleteDoc 
 import { db } from '../../firebase';
 import PostUser from '../PostUser/PostUser';
 import { ProfileHeader } from '../ProfileHeader/ProfileHeader';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const OtherUser = () => {
   const [userData, setUserData] = useState(null);
@@ -16,27 +16,39 @@ const OtherUser = () => {
   const [currentUserId, setCurrentUserId] = useState('');
   const { userId } = useParams();
 
+  // Listen for Auth changes
   useEffect(() => {
-    const fetchUserData = async () => {
-      const docRef = doc(db, 'users', userId);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const data = { id: docSnap.id, ...docSnap.data() };
-        setUserData(data);
-        getUserPosts(docSnap.id);
-      }
-    };
-
     const auth = getAuth();
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      setCurrentUserId(currentUser.uid);
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserId(user.uid);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
+  // Fetch user data
+  const fetchUserData = async () => {
+    if (!userId) return;
+    const docRef = doc(db, 'users', userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = { id: docSnap.id, ...docSnap.data() };
+      setUserData(data);
+      getUserPosts(docSnap.id);
+    }
+  };
+
+  // Refresh method to pass down
+  const refreshUser = () => {
+    fetchUserData();
+  };
+
+  useEffect(() => {
     fetchUserData();
   }, [userId]);
 
+  // Fetch posts
   const getUserPosts = async (uid) => {
     const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(q);
@@ -46,6 +58,7 @@ const OtherUser = () => {
     setPosts(userPosts);
   };
 
+  // Edit, Save, Delete posts
   const handleEdit = (postId, currentText) => {
     setEditingPostId(postId);
     setEditedText(currentText);
@@ -62,7 +75,6 @@ const OtherUser = () => {
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm('¿Seguro que quieres borrar este post?');
     if (!confirmDelete) return;
-
     await deleteDoc(doc(db, 'posts', postId));
     getUserPosts(userData.id);
   };
@@ -75,7 +87,13 @@ const OtherUser = () => {
     <>
       <TopBar />
       <div className="mypost-container">
-        <ProfileHeader userData={userData} currentUserId={currentUserId} />
+        {userData && currentUserId && (
+          <ProfileHeader
+            userData={userData}
+            currentUserId={currentUserId}
+            refreshUser={refreshUser}
+          />
+        )}
 
         <div className="user-posts-section">
           {userPosts.length === 0 ? (

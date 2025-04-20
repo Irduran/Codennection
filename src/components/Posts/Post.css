@@ -237,25 +237,6 @@
   margin-left: 10px;
 }
 
-/* Botón compartir */
-.share-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-}
-
-.share-button img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
-
-.share-button:hover img {
-  opacity: 0.7;
-}
 
 /* Opciones de post */
 .post-options-container {

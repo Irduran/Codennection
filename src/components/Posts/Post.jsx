@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   doc,
   updateDoc,
@@ -40,6 +40,7 @@ const Post = ({
   const [isOwner, setIsOwner] = useState(false);
   const [currentQuacks, setCurrentQuacks] = useState(quacks);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const optionsRef = useRef(null);
 
   useEffect(() => {
     const checkLike = async () => {
@@ -64,6 +65,23 @@ const Post = ({
     };
     checkOwner();
   }, [id, currentUser?.uid]);
+
+  // Detecta clics fuera del menú
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setShowOptions(false);
+      }
+    };
+
+    if (showOptions) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showOptions]);
 
   const toggleOptions = () => setShowOptions(!showOptions);
 
@@ -138,7 +156,6 @@ const Post = ({
           >
             {username}
           </Link>
-
           <div className="time">{time}</div>
           {sharedBy && (
           <div className="shared-label">
@@ -146,28 +163,25 @@ const Post = ({
           </div>
         )}
         </div>
-
         <button className="share-button" onClick={handleShare}>
           <img src={share} alt="share" />
         </button>
-        <div className="post-options-container">
-          <div className="post-options" onClick={toggleOptions}>...</div>
-          {showOptions && (
-            <div className="options-menu">
-              {isOwner && (
-                <>
-                  {isEditing ? (
-                    <div className="option" onClick={onSave}>Guardar</div>
-                  ) : (
-                    <div className="option" onClick={onEdit}>Editar</div>
-                  )}
-                  <div className="option" onClick={onDelete}>Borrar</div>
-                </>
-              )}
-              <div className="option">Reportar</div>
-            </div>
-          )}
-        </div>
+        <div className="post-options" onClick={toggleOptions}>⋯</div>
+        {showOptions && (
+          <div className="options-menu" ref={optionsRef}>
+            {isOwner && (
+              <>
+                {isEditing ? (
+                  <div className="option" onClick={onSave}>Save✨</div>
+                ) : (
+                  <div className="option" onClick={onEdit}>Edit🖋️</div>
+                )}
+                <div className="option" onClick={onDelete}>Delete❌</div>
+              </>
+            )}
+            <div className="option">Report👀</div>
+          </div>
+        )}
       </div>
 
       <div className="post-content">
@@ -216,8 +230,8 @@ const Post = ({
           onClick={toggleLike}
         />
         <div className="actions">
-          <div className="action">{currentQuacks} quacks</div>
-          <div className="action"> comentarios</div>
+          <div className="action">{currentQuacks} Quacks!</div>
+          <div className="action"> Comments📨</div>
         </div>
       </div>
       <CommentSection postId={id} />

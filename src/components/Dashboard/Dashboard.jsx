@@ -16,6 +16,7 @@ import { ProfileCard } from "../ProfileCard/ProfileCard";
 import Post from "../Posts/Post";
 import CreatePost from "../CreatePost/CreatePost";
 import "./Dashboard.css";
+import Swal from "sweetalert2";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -81,11 +82,35 @@ const Dashboard = () => {
   };
 
   const handleDelete = async (postId) => {
-    const confirmDelete = window.confirm("¿Seguro que quieres borrar este post?");
-    if (!confirmDelete) return;
+    const result = await Swal.fire({
+      title: "Are you sure? 🤔",
+      text: "You won't be able to recover this post!🥹",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: '#463961',
+      cancelButtonColor: '#B0619e',
+      confirmButtonText: "Yes, delete it!❌",
+      cancelButtonText: "Cancel😭",
+      backdrop: true,
+      customClass: {
+        popup: "rounded-xl",
+        confirmButton: "swal2-confirm cute-btn",
+        cancelButton: "swal2-cancel cute-btn",
+      },
+    });
 
-    await deleteDoc(doc(db, "posts", postId));
-    getPosts(userData);
+    if (result.isConfirmed) {
+      await deleteDoc(doc(db, "posts", postId));
+      getUserPosts(userData.id);
+
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your post has been deleted.😉",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
   };
 
   const handleChangeEdit = (e) => {
@@ -107,13 +132,21 @@ const Dashboard = () => {
     if (searchWords.length === 0) return text;
 
     const regex = new RegExp(
-      `(${searchWords.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
+      `(${searchWords
+        .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join("|")})`,
       "gi"
     );
 
     const parts = text.split(regex);
     return parts.map((part, i) =>
-      regex.test(part) ? <mark className="highlight" key={i}>{part}</mark> : part
+      regex.test(part) ? (
+        <mark className="highlight" key={i}>
+          {part}
+        </mark>
+      ) : (
+        part
+      )
     );
   };
 
@@ -126,7 +159,8 @@ const Dashboard = () => {
 
         {searchTerm.trim() && filteredPosts.length === 0 ? (
           <p style={{ padding: "1rem", fontStyle: "italic", color: "#888" }}>
-            No se encontraron posts con el término "<strong>{searchTerm}</strong>"
+            No se encontraron posts con el término "
+            <strong>{searchTerm}</strong>"
           </p>
         ) : (
           filteredPosts.map((post) => (
@@ -160,6 +194,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
-

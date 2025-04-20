@@ -5,7 +5,10 @@ import {
   arrayUnion,
   increment,
   getDoc,
-  arrayRemove
+  addDoc,
+  arrayRemove,
+  collection,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import "./Post.css";
@@ -24,6 +27,7 @@ const Post = ({
   text,
   media = [],
   quacks = 0,
+  sharedBy,
   isEditing,
   onEdit,
   onSave,
@@ -115,21 +119,53 @@ const Post = ({
     );
   };
 
+  const handleShare = async () => {
+    if (!currentUser) return;
+
+    const postRef = doc(db, "posts", id); 
+    const postSnap = await getDoc(postRef); 
+
+    if (postSnap.exists()) {
+      const originalPost = postSnap.data();
+
+
+      await addDoc(collection(db, "posts"), {
+        ...originalPost, 
+        userId: currentUser.uid,  
+        quacks: 0,  
+        createdAt: serverTimestamp(),
+        quackedBy: [],  
+        sharedBy: currentUser.nombre,  
+      });
+    }
+  };
+
   return (
     <div className="post-container">
       <div className="post-header">
         <div className="profile-picture-container">
-          <img src={profilePic || blankProfile} alt="Profile" />
+          <img
+            src={profilePic || blankProfile}
+            alt="Profile"
+          />
         </div>
         <div className="post-info">
           <Link
-            to={userId === currentUser?.uid ? "/profile" : `/user/${userId}`}
+            to={userId === currentUser?.uid ? '/profile' : `/user/${userId}`}
             className="username"
           >
             {username}
           </Link>
           <div className="time">{time}</div>
+          {sharedBy && (
+          <div className="shared-label">
+            Shared by {sharedBy}
+          </div>
+        )}
         </div>
+        <button className="share-button" onClick={handleShare}>
+          <img src={share} alt="share" />
+        </button>
         <div className="post-options" onClick={toggleOptions}>⋯</div>
         {showOptions && (
           <div className="options-menu" ref={optionsRef}>

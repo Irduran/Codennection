@@ -124,6 +124,7 @@ const Perfil = () => {
                 text={editingPostId === post.id ? editedText : post.text}
                 media={post.media}
                 quacks={post.quacks}
+                sharedBy ={post.sharedBy}
                 comments={post.comments}
                 isEditing={editingPostId === post.id}
                 {...(post.userId === currentUserId && {

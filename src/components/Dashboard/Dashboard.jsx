@@ -178,6 +178,7 @@ const Dashboard = () => {
               }
               media={post.media}
               quacks={post.quacks}
+              sharedBy ={post.sharedBy}
               comments={post.comments}
               isEditing={editingPostId === post.id}
               onEdit={() => handleEdit(post.id, post.text)}

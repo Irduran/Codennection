@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   collection,
   getDocs,
+  getDoc,
   query,
   orderBy,
   updateDoc,
@@ -24,14 +25,31 @@ const Dashboard = () => {
   const [editedText, setEditedText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const getPosts = async () => {
+  const getPosts = async (currentUser) => {
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      console.error("User not found");
+      return;
+    }
+
+    const freshUserData = userSnap.data();
+
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    setPosts(data);
+
+    const filteredData = data.filter(
+      (post) =>
+        freshUserData.following.includes(post.userId) ||
+        post.userId === currentUser.uid
+    );
+
+    setPosts(filteredData);
   };
 
   useEffect(() => {
@@ -40,9 +58,14 @@ const Dashboard = () => {
       navigate("/");
     } else {
       setUserData(storedUserData);
-      getPosts();
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (userData) {
+      getPosts(userData);
+    }
+  }, [userData]);
 
   const handleEdit = (postId, currentText) => {
     setEditingPostId(postId);
@@ -54,7 +77,7 @@ const Dashboard = () => {
     await updateDoc(postRef, { text: editedText });
     setEditingPostId(null);
     setEditedText("");
-    getPosts(); // Recarga los posts actualizados
+    getPosts(userData);
   };
 
   const handleDelete = async (postId) => {
@@ -62,7 +85,7 @@ const Dashboard = () => {
     if (!confirmDelete) return;
 
     await deleteDoc(doc(db, "posts", postId));
-    getPosts(); // Actualiza la lista de posts
+    getPosts(userData);
   };
 
   const handleChangeEdit = (e) => {
@@ -99,7 +122,7 @@ const Dashboard = () => {
       <TopBar onSearchChange={setSearchTerm} />
       {userData && <ProfileCard user={userData} />}
       <div className="dashboard-container">
-        <CreatePost onPostCreated={getPosts} />
+        <CreatePost onPostCreated={() => getPosts(userData)} />
 
         {searchTerm.trim() && filteredPosts.length === 0 ? (
           <p style={{ padding: "1rem", fontStyle: "italic", color: "#888" }}>
@@ -136,4 +159,6 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
 

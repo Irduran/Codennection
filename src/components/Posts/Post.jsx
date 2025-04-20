@@ -111,9 +111,13 @@ const Post = ({
           />
         </div>
         <div className="post-info">
-        <Link to={`/user/${userId}`} className="username">
+        <Link
+          to={userId === currentUser?.uid ? '/profile' : `/user/${userId}`}
+          className="username"
+        >
           {username}
         </Link>
+
           <div className="time">{time}</div>
         </div>
         <button className="share-button">

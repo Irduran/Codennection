@@ -20,7 +20,6 @@ function Registro() {
     const userData = sessionStorage.getItem("userData");
     if (userData) {
       setUser(JSON.parse(userData));
-      console.log(userData);
     } else {
       navigate("/");
     }
@@ -86,6 +85,8 @@ function Registro() {
         profilePic: imageUrl || null,
         bio: bio,
         programmingLanguages: programmingLanguages,
+        followers: [],
+        following: [],
       };
 
       await setDoc(doc(db, "users", userAuth.uid), userData);

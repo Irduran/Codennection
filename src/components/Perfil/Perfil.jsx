@@ -6,6 +6,7 @@ import { db } from "../../firebase";
 import PostUser from '../PostUser/PostUser';
 import { ProfileHeader } from '../ProfileHeader/ProfileHeader';
 import { getAuth } from 'firebase/auth';
+import Swal from 'sweetalert2';
 
 const Perfil = () => {
   const [userData, setUserData] = useState(null);
@@ -59,11 +60,35 @@ const Perfil = () => {
   };
 
   const handleDelete = async (postId) => {
-    const confirmDelete = window.confirm("¿Seguro que quieres borrar este post?");
-    if (!confirmDelete) return;
-
-    await deleteDoc(doc(db, "posts", postId));
-    getUserPosts(userData.id);
+    const result = await Swal.fire({
+      title: 'Are you sure? 🤔',
+      text: "You won't be able to recover this post!🥹",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#463961',
+      cancelButtonColor: '#B0619e',
+      confirmButtonText: 'Yes, delete it!❌',
+      cancelButtonText: 'Cancel😭',
+      backdrop: true,
+      customClass: {
+        popup: 'rounded-xl',
+        confirmButton: 'swal2-confirm cute-btn',
+        cancelButton: 'swal2-cancel cute-btn',
+      }
+    });
+  
+    if (result.isConfirmed) {
+      await deleteDoc(doc(db, "posts", postId));
+      getUserPosts(userData.id);
+  
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Your post has been deleted.😉',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
   };
 
   const handleChangeEdit = (e) => {
@@ -86,7 +111,7 @@ const Perfil = () => {
 
         <div className="user-posts-section">
           {userPosts.length === 0 ? (
-            <p style={{ textAlign: "center", marginTop: "2rem" }}>No has publicado nada aún.</p>
+            <p style={{ textAlign: "center", marginTop: "2rem", color:"#fff" }}>Nothing Here Yet...</p>
           ) : (
             userPosts.map((post) => (
               <PostUser

@@ -37,7 +37,7 @@ const CommentSection = ({ postId }) => {
     const commentData = {
         commentedBy: currentUser.nombre,
         commentedUid: currentUser.uid,
-        profilePic: currentUser.photoURL || "",
+        profilePic: currentUser.profilePic || "",
         text: comment.trim(),
         createdAt: serverTimestamp(),
       };
@@ -56,12 +56,12 @@ const CommentSection = ({ postId }) => {
       <form onSubmit={handleCommentSubmit} className="comment-form">
         <input
           type="text"
-          placeholder="Escribe un comentario..."
+          placeholder="Write a comment..."
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           className="comment-input"
         />
-        <button type="submit" className="comment-btn">Enviar</button>
+        <button type="submit" className="comment-btn">Comment!</button>
       </form>
 
       <div className="comment-list">

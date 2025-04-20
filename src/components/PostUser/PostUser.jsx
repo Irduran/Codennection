@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   doc,
   updateDoc,
@@ -14,10 +14,10 @@ import duck from "../../assets/duck.svg";
 import share from "../../assets/share.svg";
 import CommentSection from "../Comments/CommentSection";
 
-
 const PostUser = ({
   id,
   username,
+  userId, // 👈 Necesario para comparar con currentUser
   profilePic,
   time,
   text,
@@ -36,6 +36,8 @@ const PostUser = ({
   const [currentQuacks, setCurrentQuacks] = useState(quacks);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
 
+  const optionsRef = useRef();
+
   useEffect(() => {
     // Verifica si el usuario ya dio like
     const checkLike = async () => {
@@ -50,26 +52,37 @@ const PostUser = ({
   }, [id, currentUser?.uid]);
 
   useEffect(() => {
-    const checkOwner = async () => {
-      const postRef = doc(db, "posts", id);
-      const postSnap = await getDoc(postRef);
-      const data = postSnap.data();
-      if (data?.userId === currentUser?.uid) {
-        setIsOwner(true);
+    if (userId === currentUser?.uid) {
+      setIsOwner(true);
+    }
+  }, [userId, currentUser?.uid]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (optionsRef.current && !optionsRef.current.contains(e.target)) {
+        setShowOptions(false);
       }
     };
-    checkOwner();
-  }, [id, currentUser?.uid]);
+
+    if (showOptions) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showOptions]);
 
   const toggleOptions = () => setShowOptions(!showOptions);
 
   const toggleLike = async () => {
     if (!currentUser) return;
-  
+
     const postRef = doc(db, "posts", id);
-  
+
     if (liked) {
-      // Si ya le dio like, entonces lo quita
       await updateDoc(postRef, {
         quacks: increment(-1),
         quackedBy: arrayRemove(currentUser.uid),
@@ -77,7 +90,6 @@ const PostUser = ({
       setLiked(false);
       setCurrentQuacks((prev) => prev - 1);
     } else {
-      // Si no le ha dado like, lo da
       await updateDoc(postRef, {
         quacks: increment(1),
         quackedBy: arrayUnion(currentUser.uid),
@@ -98,12 +110,11 @@ const PostUser = ({
       prevIndex === media.length - 1 ? 0 : prevIndex + 1
     );
   };
-  
 
   return (
-<div className="post-container">
+    <div className="post-container">
       <div className="post-header">
-      <div className="profile-picture-container">
+        <div className="profile-picture-container">
           <img
             src={profilePic || blankProfile}
             alt="Profile"
@@ -113,27 +124,22 @@ const PostUser = ({
           <div className="username">{username}</div>
           <div className="time">{time}</div>
         </div>
-        <button className="share-button">
-          <img src={share} alt="share" />
-        </button>
-        <div className="post-options-container">
-          <div className="post-options" onClick={toggleOptions}>...</div>
-        {showOptions && (
-          <div className="options-menu">
-            {isOwner && (
-              <>
-                {isEditing ? (
-                  <div className="option" onClick={onSave}>Guardar</div>
-                ) : (
-                  <div className="option" onClick={onEdit}>Editar</div>
-                )}
-                <div className="option" onClick={onDelete}>Borrar</div>
-              </>
-            )}
-            <div className="option">Reportar</div>
-          </div>
-        )}
-        </div>
+        <div className="post-options" onClick={toggleOptions}>...</div>
+          {showOptions && (
+            <div className="options-menu" ref={optionsRef}>
+              {isOwner && (
+                <>
+                  {isEditing ? (
+                    <div className="option" onClick={onSave}>Save✨</div>
+                  ) : (
+                    <div className="option" onClick={onEdit}>Edit🖋️</div>
+                  )}
+                  <div className="option" onClick={onDelete}>Delete❌</div>
+                </>
+              )}
+              <div className="option">Report👀</div>
+            </div>
+          )}
       </div>
 
       <div className="post-content">
@@ -174,7 +180,6 @@ const PostUser = ({
         )}
       </div>
 
-
       <div className="post-footer">
         <img
           src={duck}
@@ -183,15 +188,13 @@ const PostUser = ({
           onClick={toggleLike}
         />
         <div className="actions">
-          <div className="action">{currentQuacks} quacks</div>
-          <div className="action"> comentarios</div>
+          <div className="action">{currentQuacks} Quacks!</div>
+          <div className="action"> Comments📨</div>
         </div>
       </div>
       <CommentSection postId={id} />
     </div>
-    
   );
 };
-
 
 export default PostUser;

@@ -1,0 +1,260 @@
+.registro-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.registro-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 800px; 
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+}
+
+#username::placeholder{
+  color: #fdf;
+}
+
+.form-columns {
+  display: flex;
+  gap: 20px;
+}
+
+.form-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bio-container {
+  position: relative;
+}
+
+.bio-container textarea {
+  width: 100%;
+  height: 100px;
+  resize: none; 
+}
+
+.char-counter {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: #cccccc;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+.file-drop-area {
+  border: 2px dashed #b0619e;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  transition: background-color 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.file-drop-area.dragover {
+  background-color: rgba(176, 97, 158, 0.2);
+}
+
+.file-drop-area p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.file-input-label {
+  display: inline-block;
+  background-color: #b0619e;
+  border-radius: 30px;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.file-input-label:hover {
+  background-color: #a0558e;
+}
+
+.file-drop-area input[type="file"] {
+  display: none;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.file-input-label {
+  display: inline-block;
+  background-color: #b0619e;
+  border-radius: 30px;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.file-input-label:hover {
+  background-color: #a0558e;
+}
+
+.file-drop-area input[type="file"] {
+  display: none;
+}
+
+.registro-container input,
+.registro-container textarea {
+  background-color: #cccccc40;
+  border-color: slategray;
+  border-radius: 30px;
+  width: 100%;
+  padding: 15px;
+  border-width: 0px;
+  color: white;
+}
+
+.registro-container input:focus,
+.registro-container textarea:focus {
+  outline: 1px solid plum;
+  box-shadow: 0 0 14px plum;
+}
+
+.registro-container ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.registro-container ul li {
+  background-color: #cccccc40;
+  border-radius: 30px;
+  padding: 10px;
+  color: white;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.registro-container button {
+  background-color: #b0619e;
+  border-color: slategray;
+  border-radius: 30px;
+  width: 40%;
+  padding: 10px;
+  border-width: 0px;
+  color: white;
+  font-size: large;
+  margin-top: 20px;
+}
+
+.registro-container .add {
+  background-color: #b0619e;
+  border-radius: 100px;
+  width: 10%;
+  padding: 10px;
+  color: white;
+  font-size: large;
+}
+
+.registro-container h1 {
+  color: #e574bc;
+}
+
+.registro-container p {
+  color: #fff;
+}
+
+.add-language-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.add-language-container input {
+  flex: 1;
+  background-color: #cccccc40;
+  border-color: slategray;
+  border-radius: 30px;
+  padding: 15px;
+  border-width: 0px;
+  color: white;
+}
+
+.add-language-container .add {
+  background-color: #b0619e;
+  border-radius: 100px;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  color: white;
+  font-size: large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+
+.add-language-container .add:hover {
+  background-color: #a0558e;
+}
+
+.language-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.language-item {
+  background-color: #f3f0ff;
+  color: #4b0082;
+  border: 1px solid #d9cfff;
+  padding: 6px 12px;
+  margin: 4px 0;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+}
+.remove-btn {
+  background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 12px; 
+    font-weight: bold;
+    width: 0px;
+    height: 0px;
+    border-radius: 50%;
+    display: inline;
+    align-items: start;
+    transition: background-color 0.3s ease;
+    padding: 10;
+    margin-left: 10px;
+}
+

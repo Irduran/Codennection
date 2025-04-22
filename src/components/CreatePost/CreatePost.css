@@ -1,0 +1,55 @@
+.create-post {
+  width: 100%;
+  max-width: 600px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 140px;
+  }
+  
+  .create-post textarea {
+    resize: none;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    min-height: 100px;
+    background-color: #ffffffdd;
+    font-family: inherit;
+    outline: none;
+  }
+  
+  .create-post input[type="file"] {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    border-radius: 8px;
+  }
+  
+  .create-post button {
+    align-self: flex-end;
+    background-color: #b0619e;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .create-post button:hover {
+    background-color: #984b86;
+  }
+  
+  .create-post button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  

@@ -1,0 +1,125 @@
+.login-container {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.login-container h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.login-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.image {
+  border-radius: 20%;
+  height: 80px;
+  width: 120px;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.google-login {
+  border-radius: 20%;
+  height: 50px;
+  width: 50px;
+  margin: 0 auto;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.login-container input {
+  background-color: #cccccc40;
+  border-color: slategray;
+  border-radius: 30px;
+  width: 90%;
+  padding: 15px;
+  border-width: 0px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.login-container input:focus {
+  outline: 1px solid plum;
+  box-shadow: 0 0 14px plum;
+}
+
+.login-container button {
+  background-color: #b0619e;
+  border-color: slategray;
+  border-radius: 30px;
+  width: 90%;
+  padding: 10px;
+  border-width: 0px;
+  margin-bottom: 20px;
+  color: white;
+  font-size: large;
+}
+
+.login-container .forgot-password {
+  color: white;
+  cursor: pointer;
+}
+
+.login-container .forgot-password:hover {
+  text-decoration: underline;
+}
+
+#email::placeholder,
+#password::placeholder,
+#bio::placeholder,
+#programming::placeholder{
+  color: #fdf;
+}
+
+.texto{
+  color: #fff;
+  font-size: 20px;
+  margin-left: -10%;
+  margin-bottom: 0%;
+}
+
+.login-container .btnswitch{
+  background-color: transparent;
+  width: 10%;
+  color: #E574BC;
+  font-size: 25px;
+  margin-bottom: 0%;
+}
+
+.login-container .btnswitch:hover{
+  text-decoration: underline;
+}
+
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 90%;
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 40px;
+  top: 35%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+}

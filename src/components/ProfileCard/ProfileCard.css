@@ -1,0 +1,101 @@
+ .profile-card {
+    width: 18rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: black;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    overflow: hidden;
+    padding-top: 40px;
+    margin-top: 8%;
+    margin-left: 10%;
+    position: fixed;
+  }
+  
+  .profile-header {
+    background-color: #8e44ad;
+    height: 90px; /* Adjusted height for better coverage */
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  .profile-avatar {
+    width: 90px;
+    height: 90px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 40px; /* Lower the avatar more */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid white; /* Optional for a better look */
+    z-index: 10;
+    object-fit: cover;
+  }
+  
+  .profile-avatar::after {
+    content: '';
+    width: 60px;
+    height: 60px;
+    background-color: #bdc3c7;
+    border-radius: 50%;
+  }
+  
+  .profile-body {
+    margin-top: 60px; /* Move content lower */
+  }
+  
+  .profile-username {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .profile-bio {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFFF;
+  }
+  
+  .profile-skills {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+  
+  .badge {
+    background-color: #cccccc40;
+    border: 1px solid slategray;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    color: #fff;
+  }
+  
+  .profile-footer {
+    padding: 10px;
+    border-top: 1px solid slategray;
+    margin-top: 10%;
+  }
+  
+  .profile-button {
+    background-color: #b0619e;
+    border: none;
+    border-radius: 30px;
+    width: 90%;
+    padding: 10px;
+    color: white;
+    font-size: large;
+    cursor: pointer;
+  }
+  
+  .profile-button:hover {
+    text-decoration: underline;
+  }

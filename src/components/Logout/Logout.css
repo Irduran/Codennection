@@ -1,0 +1,15 @@
+.topbar-logout-round {
+    background-color: #b57ad6;
+    padding: 10px;
+    border-radius: 70px;
+    width: 46px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.topbar-logout {
+    color: #ffffff;
+    font-size: 25px;
+}

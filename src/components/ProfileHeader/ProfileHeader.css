@@ -1,0 +1,135 @@
+.my-profile-container {
+    width: 1000px;
+    height: 400px;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: "Courier New", Courier, monospace;
+    margin-bottom: 20px;
+  }
+  
+  .my-banner {
+    background-color: #764c7d;
+    backdrop-filter: blur(10px);
+    height: 150px;
+  }
+  
+  .my-profile-section {
+    padding: 10px;
+    position: relative;
+  }
+  
+  .my-profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: 30px;
+    object-fit: cover;
+  }
+  
+  .my-edit-icon {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+  }
+
+  .my-edit-icon img {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .my-text-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 50px;
+    margin-left: 10px;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .my-info-name{
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+  }
+
+  .my-info-bio{
+    font-size: 14px;
+    color: #d1d1d1;
+    font-style: italic;
+  }
+
+  .my-followers-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+  }
+  
+  .my-followers-count, .my-following-count {
+    font-size: 14px;
+    color: #ece6e6;
+  }
+  
+  .my-button-container {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .my-button {
+    height: 25px;
+    border-radius: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .my-button-visibility {
+    width: 120px;
+    background-color: #5b366e;
+    text-align: center;
+    color:#ece6e6;
+    padding: 2px;
+  }
+
+
+  .my-chat-icon {
+    cursor: pointer;
+  }
+
+  .my-chat-icon img{
+    width: 25px;
+    height: 25px;
+  }
+
+  
+  .my-location {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    color: white;
+    margin-left: 10px;
+  }
+
+  .follow-btn {
+    padding: 6px 12px;
+    background-color: #b57ad6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .follow-btn:hover {
+    background-color: #5b366e;
+  }
+  

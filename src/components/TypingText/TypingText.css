@@ -1,0 +1,42 @@
+.typing-text {
+  font-family: 'Courier New', Courier, monospace;
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  color: white;
+  font-size: 7vw; 
+  z-index: 10;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.text2 {
+  color: #E574BC;
+  margin-left: 50%;
+  font-size: 8vw; 
+}
+
+@media (max-width: 768px) {
+  .typing-text {
+    font-size: 6vw; 
+    top: 2%;
+    left: 20%;
+  }
+
+  .text2 {
+    font-size: 7vw; 
+    margin-left: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .typing-text {
+    font-size: 5vw; 
+    left: 2%;
+  }
+
+  .text2 {
+    font-size: 6vw; 
+    margin-left: 20%;
+  }
+}

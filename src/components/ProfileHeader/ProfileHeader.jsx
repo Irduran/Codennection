@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router-dom';
 export const ProfileHeader = ({ userData, currentUserId, refreshUser }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isMyProfile, setIsMyProfile] = useState(false);
+  const [buttonLabel, setButtonLabel] = useState('Follow');
+  const [buttonClass, setButtonClass] = useState('default');
+
 
   const navigate = useNavigate();
 
@@ -15,13 +18,14 @@ export const ProfileHeader = ({ userData, currentUserId, refreshUser }) => {
     navigate("/editprofile");
   };
 
-
+  // Detect if viewing own profile
   useEffect(() => {
     if (userData && currentUserId) {
       setIsMyProfile(userData?.id === currentUserId);
     }
   }, [userData, currentUserId]);
 
+  // Check if following target user
   useEffect(() => {
     const checkFollowingStatus = async () => {
       if (!userData?.id || !currentUserId || isMyProfile) return;
@@ -35,6 +39,21 @@ export const ProfileHeader = ({ userData, currentUserId, refreshUser }) => {
 
     checkFollowingStatus();
   }, [userData, currentUserId, isMyProfile]);
+
+  // Set button label based on following status and profile privacy
+  useEffect(() => {
+    if (isMyProfile || !currentUserId) return;
+
+    if (isFollowing) {
+      setButtonLabel('Codders');
+      setButtonClass('codders');
+    } else if (userData?.isPrivate) {
+      setButtonLabel('? Codders');
+    } else {
+      setButtonLabel('Follow');
+      setButtonClass('default');
+    }
+  }, [isFollowing, userData, isMyProfile, currentUserId]);
 
   const handleFollowToggle = async () => {
     if (!userData?.id || !currentUserId) {
@@ -64,7 +83,6 @@ export const ProfileHeader = ({ userData, currentUserId, refreshUser }) => {
         await updateDoc(targetUserRef, {
           followers: arrayRemove(currentUserId),
         });
-
         setIsFollowing(false);
       } else {
         await updateDoc(currentUserRef, {
@@ -73,7 +91,6 @@ export const ProfileHeader = ({ userData, currentUserId, refreshUser }) => {
         await updateDoc(targetUserRef, {
           followers: arrayUnion(currentUserId),
         });
-
         setIsFollowing(true);
       }
 
@@ -84,6 +101,28 @@ export const ProfileHeader = ({ userData, currentUserId, refreshUser }) => {
     }
   };
 
+  const handleButtonClick = () => {
+    if (userData?.isPrivate && !isFollowing) {
+      console.log(`send request to ${userData?.nombre || userData?.email}`);
+    } else {
+      handleFollowToggle();
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (isFollowing) {
+      setButtonLabel('!Codders');
+      setButtonClass('codders');
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    if (isFollowing) {
+      setButtonLabel('Codders');
+      setButtonClass('codders');
+    }
+  };
+  
   return (
     <div className="my-profile-container">
       <div className="my-banner"></div>
@@ -99,7 +138,7 @@ export const ProfileHeader = ({ userData, currentUserId, refreshUser }) => {
             <img src={edit} alt="Edit Icon" />
           </button>
         )}
-        
+
         <div className="my-text-info">
           <span className="my-info-name">
             {userData?.nombre || userData?.email || 'Mi Nombre'}
@@ -123,8 +162,13 @@ export const ProfileHeader = ({ userData, currentUserId, refreshUser }) => {
             </div>
 
             {!isMyProfile && currentUserId && (
-              <button className="follow-btn" onClick={handleFollowToggle}>
-                {isFollowing ? 'Dejar de seguir' : 'Seguir'}
+              <button
+                className={`follow-btn ${buttonClass}`}
+                onClick={handleButtonClick}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                {buttonLabel}
               </button>
             )}
           </div>

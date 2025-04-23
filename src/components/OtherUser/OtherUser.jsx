@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import './OtherUser.css';
 import TopBar from '../Navigation/TopBar';
 import { useParams } from 'react-router-dom';
-import { doc, getDoc, collection, getDocs, query, orderBy, updateDoc, deleteDoc, addDoc, where } from 'firebase/firestore';
+import {
+  doc, getDoc, collection, getDocs, query, orderBy, updateDoc,
+  deleteDoc, addDoc, where
+} from 'firebase/firestore';
 import { db } from '../../firebase';
 import PostUser from '../PostUser/PostUser';
 import { ProfileHeader } from '../ProfileHeader/ProfileHeader';
@@ -24,7 +27,6 @@ const OtherUser = () => {
   const containsForbiddenWords = (text) => {
     return forbiddenWords.some((word) => text.toLowerCase().includes(word));
   };
-
 
   // Listen for Auth changes
   useEffect(() => {
@@ -68,12 +70,13 @@ const OtherUser = () => {
     setPosts(userPosts);
   };
 
-  // Edit, Save, Delete posts
+  // Edit post
   const handleEdit = (postId, currentText) => {
     setEditingPostId(postId);
     setEditedText(currentText);
   };
 
+  // Save post edit
   const handleSave = async (postId) => {
     if (containsForbiddenWords(editedText)) {
       Swal.fire("⚠️", "No se permite lenguaje ofensivo en la edición del post", "error");
@@ -86,6 +89,7 @@ const OtherUser = () => {
     getUserPosts(userData.id);
   };
 
+  // Delete post
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm('¿Seguro que quieres borrar este post?');
     if (!confirmDelete) return;
@@ -93,10 +97,12 @@ const OtherUser = () => {
     getUserPosts(userData.id);
   };
 
+  // Edit text change handler
   const handleChangeEdit = (e) => {
     setEditedText(e.target.value);
   };
 
+  // Report user
   const handleReportUser = async () => {
     const currentUser = JSON.parse(sessionStorage.getItem("userData"));
     if (!currentUser) return;
@@ -143,11 +149,12 @@ const OtherUser = () => {
     <>
       <TopBar />
       <div className="mypost-container">
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
           <button onClick={handleReportUser} className="report-btn">
             🚷 Reportar perfil
           </button>
         </div>
+
         {userData && currentUserId && (
           <ProfileHeader
             userData={userData}
@@ -156,33 +163,40 @@ const OtherUser = () => {
           />
         )}
 
-        <div className="user-posts-section">
-          {userPosts.length === 0 ? (
-            <p style={{ textAlign: 'center', marginTop: '2rem', color: 'white' }}>
-              Este usuario aún no ha publicado nada.
-            </p>
-          ) : (
-            userPosts.map((post) => (
-              <PostUser
-                key={post.id}
-                id={post.id}
-                username={post.username}
-                profilePic={post.profilePic}
-                time={new Date(post.createdAt?.seconds * 1000).toLocaleString()}
-                text={editingPostId === post.id ? editedText : post.text}
-                media={post.media}
-                quacks={post.quacks}
-                sharedBy ={post.sharedBy}
-                comments={post.comments}
-                isEditing={editingPostId === post.id}
-                onEdit={() => handleEdit(post.id, post.text)}
-                onSave={() => handleSave(post.id)}
-                onDelete={() => handleDelete(post.id)}
-                onChangeEdit={handleChangeEdit}
-              />
-            ))
-          )}
-        </div>
+        {/* Posts or Private notice */}
+        {userData?.isPrivate && !userData?.followers?.includes(currentUserId) ? (
+          <p style={{ textAlign: 'center', marginTop: '2rem', color: 'white' }}>
+            📛 Este perfil es privado.
+          </p>
+        ) : (
+          <div className="user-posts-section">
+            {userPosts.length === 0 ? (
+              <p style={{ textAlign: 'center', marginTop: '2rem', color: 'white' }}>
+                Este usuario aún no ha publicado nada.
+              </p>
+            ) : (
+              userPosts.map((post) => (
+                <PostUser
+                  key={post.id}
+                  id={post.id}
+                  username={post.username}
+                  profilePic={post.profilePic}
+                  time={new Date(post.createdAt?.seconds * 1000).toLocaleString()}
+                  text={editingPostId === post.id ? editedText : post.text}
+                  media={post.media}
+                  quacks={post.quacks}
+                  sharedBy={post.sharedBy}
+                  comments={post.comments}
+                  isEditing={editingPostId === post.id}
+                  onEdit={() => handleEdit(post.id, post.text)}
+                  onSave={() => handleSave(post.id)}
+                  onDelete={() => handleDelete(post.id)}
+                  onChangeEdit={handleChangeEdit}
+                />
+              ))
+            )}
+          </div>
+        )}
       </div>
     </>
   );

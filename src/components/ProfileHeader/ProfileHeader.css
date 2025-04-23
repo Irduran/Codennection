@@ -128,8 +128,22 @@
     cursor: pointer;
     transition: background-color 0.3s;
   }
+
+  .follow-btn.default {
+    background-color: #b57ad6;
+
+  }
   
-  .follow-btn:hover {
+  .follow-btn.default:hover {
     background-color: #5b366e;
+  }
+  
+  .follow-btn.codders {
+    background-color: #279743;
+
+  }
+
+  .follow-btn.codders:hover {
+    background-color: #bd2222;
   }
   

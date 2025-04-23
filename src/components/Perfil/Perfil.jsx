@@ -19,23 +19,29 @@ const Perfil = () => {
     const storedData = sessionStorage.getItem("userData");
     if (storedData) {
       const parsedData = JSON.parse(storedData);
-      fetchUserData(parsedData.uid);
-      getUserPosts(parsedData.uid);
+      fetchUserData(parsedData.id);
+      getUserPosts(parsedData.id);
     }
     const auth = getAuth();
     const currentUser = auth.currentUser;
     if (currentUser) {
-      setCurrentUserId(currentUser.uid);
+      setCurrentUserId(currentUser.id);
     }
   }, []);
 
   const fetchUserData = async (uid) => {
+    if (!uid) return;
+  
     const userRef = doc(db, 'users', uid);
     const userSnap = await getDoc(userRef);
+  
     if (userSnap.exists()) {
-      setUserData({ ...userSnap.data(), id: uid });
+      const userInfo = { ...userSnap.data(), id: uid };
+      setUserData(userInfo);
+      sessionStorage.setItem("userData", JSON.stringify(userInfo));
     }
   };
+  
 
   const getUserPosts = async (uid) => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));

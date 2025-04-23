@@ -12,6 +12,8 @@ function EditProfile() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [bio, setBio] = useState("");
   const [programmingLanguages, setProgrammingLanguages] = useState([]);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing]  = useState([]);
   const [newLanguage, setNewLanguage] = useState("");
   const [user, setUser] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
@@ -20,6 +22,7 @@ function EditProfile() {
 
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
+    console.log(userData)
     if (userData) {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
@@ -28,6 +31,8 @@ function EditProfile() {
       setProfilePicUrl(parsedUser.profilePic || "");
       setProgrammingLanguages(parsedUser.programmingLanguages || []);
       setIsPrivate(parsedUser.isPrivate || false);
+      setFollowers(parsedUser.followers || []);
+      setFollowing(parsedUser.following || []);
     } else {
       navigate("/");
     }
@@ -98,6 +103,8 @@ function EditProfile() {
         bio: bio,
         programmingLanguages: programmingLanguages,
         isPrivate: isPrivate,
+        followers: followers,
+        following: following
       };
 
       // Guardar datos en Firebase

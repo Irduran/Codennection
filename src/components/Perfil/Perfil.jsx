@@ -19,13 +19,13 @@ const Perfil = () => {
     const storedData = sessionStorage.getItem("userData");
     if (storedData) {
       const parsedData = JSON.parse(storedData);
-      fetchUserData(parsedData.id);
-      getUserPosts(parsedData.id);
+      fetchUserData(parsedData.uid);
+      getUserPosts(parsedData.uid);
     }
     const auth = getAuth();
     const currentUser = auth.currentUser;
     if (currentUser) {
-      setCurrentUserId(currentUser.id);
+      setCurrentUserId(currentUser.uid);
     }
   }, []);
 
@@ -110,8 +110,8 @@ const Perfil = () => {
           <ProfileHeader
             userData={userData}
             currentUserId={currentUserId}
-            refreshUser={() => fetchUserData(userData.id)}
-            isMyProfile={userData.id === currentUserId} // Pasa la verificación aquí
+            refreshUser={() => fetchUserData(userData.uid)}
+            isMyProfile={userData.uid === currentUserId} // Pasa la verificación aquí
           />
         )}
 

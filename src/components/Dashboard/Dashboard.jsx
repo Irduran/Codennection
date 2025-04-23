@@ -27,7 +27,7 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const getPosts = async (currentUser) => {
-    const userRef = doc(db, "users", currentUser.id);
+    const userRef = doc(db, "users", currentUser.uid);
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
@@ -47,7 +47,7 @@ const Dashboard = () => {
     const filteredData = data.filter(
       (post) =>
         freshUserData.following.includes(post.userId) ||
-        post.userId === currentUser.id
+        post.userId === currentUser.uid
     );
 
     setPosts(filteredData);

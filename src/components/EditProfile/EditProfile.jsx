@@ -12,17 +12,16 @@ function EditProfile() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [bio, setBio] = useState("");
   const [programmingLanguages, setProgrammingLanguages] = useState([]);
-  const [followers, setFollowers] = useState([]);
-  const [following, setFollowing]  = useState([]);
   const [newLanguage, setNewLanguage] = useState("");
   const [user, setUser] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
 
   useEffect(() => {
     const userData = sessionStorage.getItem("userData");
-    console.log(userData)
     if (userData) {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
@@ -31,8 +30,11 @@ function EditProfile() {
       setProfilePicUrl(parsedUser.profilePic || "");
       setProgrammingLanguages(parsedUser.programmingLanguages || []);
       setIsPrivate(parsedUser.isPrivate || false);
-      setFollowers(parsedUser.followers || []);
-      setFollowing(parsedUser.following || []);
+      setFollowers(parsedUser.followers || [])
+      setFollowing(parsedUser.following || [])
+
+      console.log(userData)
+      
     } else {
       navigate("/");
     }
@@ -97,6 +99,7 @@ function EditProfile() {
       }
 
       const userData = {
+        uid: userAuth.uid,
         email: userAuth.email,
         nombre: username,
         profilePic: imageUrl,
@@ -106,6 +109,8 @@ function EditProfile() {
         followers: followers,
         following: following
       };
+
+      console.log(userData)
 
       // Guardar datos en Firebase
       await setDoc(doc(db, "users", userAuth.uid), userData);
